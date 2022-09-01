@@ -15,10 +15,25 @@ void printGrid(const Grid<string>& grid);
 int main() {
 
     // TODO: Finish the program!
+    cout << "Grid input file name? ";
+    string filename;
+    cin >> filename;
 
     Grid<string> grid = createGrid();
 
-    printGrid(grid);
+    bool run = true;
+    string userInput;
+    do {
+        printGrid(grid);
+        cout << "a)nimate, t)ick, q)uit? ";
+        cin >> userInput;
+
+        if(userInput == "q") {
+            run = false;
+        }
+    } while(run);
+
+    cout << "Have a nice Life!";
 
     return 0;
 }
