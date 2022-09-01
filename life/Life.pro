@@ -4,16 +4,16 @@ CONFIG += console
 # Make sure we do not accidentally #include files placed in 'resources'
 CONFIG += no_include_pwd
 
-SOURCES = $$PWD\src\*.cpp
-SOURCES += $$PWD\lib\*.cpp
-HEADERS = $$PWD\src\*.h
-HEADERS += $$PWD\lib\StanfordCPPLib\*.h
-HEADERS += $$PWD\lib\*.h
+SOURCES = $$PWD/src/*.cpp
+SOURCES += $$PWD/lib/*.cpp
+HEADERS = $$PWD/src/*.h
+HEADERS += $$PWD/lib/StanfordCPPLib/*.h
+HEADERS += $$PWD/lib/*.h
 
 QMAKE_CXXFLAGS += -std=c++11
 
-INCLUDEPATH += $$PWD\lib\StanfordCPPLib\
-INCLUDEPATH += $$PWD\lib\
+INCLUDEPATH += $$PWD/lib/StanfordCPPLib/
+INCLUDEPATH += $$PWD/lib/
 
 # Copies the given files to the destination directory
 defineTest(copyToDestdir) {
@@ -37,10 +37,10 @@ defineTest(copyToDestdir) {
     export(QMAKE_POST_LINK)
 }
 !win32 {
-    copyToDestdir($$files($$PWD\res\*))
+    copyToDestdir($$files($$PWD/res/*))
 }
 win32 {
-    copyToDestdir($$PWD\res)
+    copyToDestdir($$PWD/res)
 }
 macx {
     cache()
