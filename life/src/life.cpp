@@ -26,6 +26,7 @@ int main() {
     string userInput;
     do {
         printGrid(grid);
+        cout << endl << endl;
         cout << "a)nimate, t)ick, q)uit? ";
         cin >> userInput;
 
