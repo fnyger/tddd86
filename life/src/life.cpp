@@ -9,8 +9,10 @@
 #include <fstream>
 using namespace std;
 
-Grid<string> createGrid();
+Grid<string> createGrid(string filename);
 void printGrid(const Grid<string>& grid);
+void tick(Grid<string>& grid);
+int countNeighbours(Grid<string> &grid, int y, int x);
 
 int main() {
 
@@ -19,7 +21,7 @@ int main() {
     string filename;
     cin >> filename;
 
-    Grid<string> grid = createGrid();
+    Grid<string> grid = createGrid(filename);
 
     bool run = true;
     string userInput;
@@ -30,12 +32,63 @@ int main() {
 
         if(userInput == "q") {
             run = false;
+        } else if (userInput == "a") {
+            while (true) {
+                tick(grid);
+                printGrid(grid);
+                cout << endl << endl;
+                pause(200);
+            }
+        } else if (userInput == "t") {
+            tick(grid);
         }
     } while(run);
 
     cout << "Have a nice Life!";
 
     return 0;
+}
+
+void tick(Grid<string>& grid) {
+    Grid<string> temp = grid;
+    int width = grid.numCols();
+    int height = grid.numRows();
+
+    for (int y = 0; y<height; y++) {
+        for (int x = 0; x<width; x++) {
+            int neighbours = countNeighbours(grid, x, y);
+            if (neighbours < 2 || neighbours > 3) {
+                temp[y][x] = "-";
+            } else if (neighbours == 3) {
+                temp[y][x] = "x";
+            }
+        }
+    }
+    grid = temp;
+}
+
+int countNeighbours(Grid<string>& grid, int y, int x) {
+    int width = grid.numCols();
+    int height = grid.numRows();
+    int count = 0;
+
+    for (int xOffset = -1; xOffset<2; xOffset++) {
+        for (int yOffset = -1; yOffset<2; yOffset++) {
+            int neighX = x + xOffset;
+            int neighY = y + yOffset;
+            if(xOffset + yOffset == 0) {
+                continue;
+            }
+            if(neighX >= 0 && neighX < width) {
+                if(neighY >= 0 && neighY < height) {
+                    if (grid[neighY][neighX] == "x") {
+                        count++;
+                    }
+                }
+            }
+        }
+    }
+    return count;
 }
 
 
@@ -53,10 +106,10 @@ void printGrid(const Grid<string>& grid) {
 }
 
 
-Grid<string> createGrid() {
+Grid<string> createGrid(string filename) {
 
     std::ifstream input;
-    input.open("../mycolony.txt");
+    input.open("../" + filename);
     string line;
 
     getline(input, line);
