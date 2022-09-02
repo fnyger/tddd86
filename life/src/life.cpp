@@ -22,7 +22,6 @@ int main() {
     cin >> filename;
 
     Grid<string> grid = createGrid(filename);
-
     bool run = true;
     string userInput;
     do {
@@ -56,14 +55,15 @@ void tick(Grid<string>& grid) {
 
     for (int y = 0; y<height; y++) {
         for (int x = 0; x<width; x++) {
-            int neighbours = countNeighbours(grid, x, y);
+            int neighbours = countNeighbours(grid, y, x);
             if (neighbours < 2 || neighbours > 3) {
-                temp[y][x] = "-";
+                temp.set(y, x, "-");
             } else if (neighbours == 3) {
-                temp[y][x] = "x";
+                temp.set(y, x, "X");
             }
         }
     }
+
     grid = temp;
 }
 
@@ -72,16 +72,16 @@ int countNeighbours(Grid<string>& grid, int y, int x) {
     int height = grid.numRows();
     int count = 0;
 
-    for (int xOffset = -1; xOffset<2; xOffset++) {
-        for (int yOffset = -1; yOffset<2; yOffset++) {
-            int neighX = x + xOffset;
-            int neighY = y + yOffset;
-            if(xOffset + yOffset == 0) {
+    for (int yOffset = -1; yOffset<2; yOffset++) {
+        for (int xOffset = -1; xOffset<2; xOffset++) {
+            if(xOffset == 0 && yOffset == 0) { //no offset
                 continue;
             }
+            int neighX = x + xOffset;
+            int neighY = y + yOffset;
             if(neighX >= 0 && neighX < width) {
                 if(neighY >= 0 && neighY < height) {
-                    if (grid[neighY][neighX] == "x") {
+                    if (grid[neighY][neighX] == "X") {
                         count++;
                     }
                 }
@@ -109,7 +109,7 @@ void printGrid(const Grid<string>& grid) {
 Grid<string> createGrid(string filename) {
 
     std::ifstream input;
-    input.open("../" + filename);
+    input.open("../life/res/" + filename);
     string line;
 
     getline(input, line);
@@ -118,7 +118,6 @@ Grid<string> createGrid(string filename) {
     int width = stoi(line);
     Grid<string> grid(height, width);
 
-    getline(input, line); //clear line
 
     for(int y=0; y<height; y++) {
         getline(input, line);
