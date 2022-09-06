@@ -109,7 +109,7 @@ void printGrid(const Grid<string>& grid) {
 
 Grid<string> createGrid(string filename) {
 
-    std::ifstream input;
+    ifstream input;
     input.open("../life/res/" + filename);
     string line;
 
