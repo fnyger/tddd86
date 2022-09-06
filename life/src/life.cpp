@@ -1,6 +1,8 @@
-// This is the CPP file you will edit and turn in.
-// Also remove these comments here and add your own.
-// TODO: remove this comment header
+// Runs game of life
+// Takes name of textfile in res folder and reads a colony
+// User has options tick to simulate one generation,
+// animate simulates 50 generations and quit exits the program.
+// filny841 felra653
 
 #include <iostream>
 #include "grid.h"
@@ -12,7 +14,7 @@ using namespace std;
 Grid<string> createGrid(string filename);
 void printGrid(const Grid<string>& grid);
 void tick(Grid<string>& grid);
-int countNeighbours(Grid<string> &grid, int y, int x);
+int countNeighbours(const Grid<string> &grid, int y, int x);
 
 int main() {
 
@@ -33,7 +35,7 @@ int main() {
         if(userInput == "q") {
             run = false;
         } else if (userInput == "a") {
-            while (true) {
+            for (int i=0; i<50; i++) {
                 tick(grid);
                 printGrid(grid);
                 cout << endl << endl;
@@ -68,7 +70,7 @@ void tick(Grid<string>& grid) {
     grid = temp;
 }
 
-int countNeighbours(Grid<string>& grid, int y, int x) {
+int countNeighbours(const Grid<string>& grid, int y, int x) {
     int width = grid.numCols();
     int height = grid.numRows();
     int count = 0;
