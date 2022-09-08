@@ -1,3 +1,5 @@
 life/Life.pro.user
 build-Life-Desktop-Debug/
+*.pro.user
+build-*-Desktop-Debug/
 
