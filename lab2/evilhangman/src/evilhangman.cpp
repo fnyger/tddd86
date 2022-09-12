@@ -12,7 +12,7 @@ const string ALPHABET  = "abcdefghijklmnopqrstuvwxyz";
 
 void createDict(unordered_set<int>& wordLengths, list<string>& dict);
 bool wordLengthExists(int length, const unordered_set<int>& lengths);
-void keepLength(list<string>& dictionary, const int length);
+void keepLength(list<string>& dictionary, const unsigned int length);
 string largestWordFamily(char guess, list<string>& dict, string currentWord);
 bool isComplete(string currentWord);
 
@@ -93,7 +93,7 @@ int main() {
 }
 
 bool isComplete(string currentWord) {
-    return (currentWord.find('-') == -1);
+    return (currentWord.find('-') == std::string::npos);
 }
 
 
@@ -101,7 +101,7 @@ string largestWordFamily(char guess, list<string>& dict, string currentWord) {
     map<string, list<string>> families;
     for(list<string>::iterator it = dict.begin(); it != dict.end(); ++it) {
         string mapKey;
-        for(int i = 0; i<(*it).length(); i++) {
+        for(list<string>::size_type i = 0; i < (*it).length(); i++) {
              if((*it)[i] == guess && mapKey[i] != '-') {
                  mapKey += guess;
              } else {
@@ -136,7 +136,7 @@ bool wordLengthExists(int length, const unordered_set<int>& lengths) {
     return lengths.count(length) >= 1;
 }
 
-void keepLength(list<string>& dictionary, const int length) {
+void keepLength(list<string>& dictionary, const unsigned int length) {
     list<string> res;
     for(list<string>::iterator it = dictionary.begin(); it != dictionary.end(); ++it) {
         if ((*it).length() == length) {
