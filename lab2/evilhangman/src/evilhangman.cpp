@@ -14,63 +14,86 @@ void createDict(unordered_set<int>& wordLengths, list<string>& dict);
 bool wordLengthExists(int length, const unordered_set<int>& lengths);
 void keepLength(list<string>& dictionary, const int length);
 string largestWordFamily(char guess, list<string>& dict, string currentWord);
+bool isComplete(string currentWord);
 
 
 int main() {
-    cout << "Welcome to Hangman." << endl;
+    bool play = true;
+    while (play) {
+        cout << endl <<"Welcome to Hangman." << endl;
 
-    list<string> dictionary;
-    unordered_set<int> wordLengths;
+        list<string> dictionary;
+        unordered_set<int> wordLengths;
 
-    createDict(wordLengths, dictionary);
+        createDict(wordLengths, dictionary);
 
-
-
-    int wordLength;
-    bool validWord = false;
-    while(!validWord) {
-        cout << "Enter word length: ";
-        cin >> wordLength;
-        validWord = wordLengthExists(wordLength, wordLengths);
-    }
-
-    int guesses = 0;
-    while (guesses <= 0) {
-        cout << endl << "Enter number of guesses: ";
-        cin >> guesses;
-    }
-
-    bool showRemaining = false;
-    string input;
-    do {
-        cout << "Show number of words left? (y/n) ";
-        cin >> input;
-    } while (input != "y" && input != "n");
-    showRemaining = input == "y";
-
-    keepLength(dictionary, wordLength);
-
-    set<char> usedLetters;
-    string currentWord = string(wordLength, '-');
-    char guess;
-
-    while(true) {
-        cout << "Number of guesses left: " << guesses << endl;
-        if(showRemaining) {
-            cout << "Number of words left: " << dictionary.size() << endl;
+        int wordLength;
+        bool validWord = false;
+        while(!validWord) {
+            cout << "Enter word length: ";
+            cin >> wordLength;
+            validWord = wordLengthExists(wordLength, wordLengths);
         }
 
-        cout << endl << currentWord << endl;
+        int guesses = 0;
+        while (guesses <= 0) {
+            cout << endl << "Enter number of guesses: ";
+            cin >> guesses;
+        }
 
+        bool showRemaining = false;
+        string input;
         do {
-            cout << endl << "Make a guess: ";
-            cin >> guess;
+            cout << "Show number of words left? (y/n) ";
+            cin >> input;
+        } while (input != "y" && input != "n");
+        showRemaining = input == "y";
 
-        } while (usedLetters.find(guess) != usedLetters.end());
-        currentWord = largestWordFamily(guess, dictionary, currentWord);
+        keepLength(dictionary, wordLength);
+
+        set<char> usedLetters;
+        string currentWord = string(wordLength, '-');
+        char guess;
+        bool won = isComplete(currentWord);
+
+        while(guesses && !won) {
+
+            cout << "Number of guesses left: " << guesses << endl;
+            if(showRemaining) {
+                cout << "Number of words left: " << dictionary.size() << endl;
+            }
+
+            cout << endl << currentWord << endl;
+
+            do {
+                cout << endl << "Make a guess: ";
+                cin >> guess;
+
+            } while (usedLetters.find(guess) != usedLetters.end());
+            currentWord = largestWordFamily(guess, dictionary, currentWord);
+
+            won = isComplete(currentWord);
+            guesses--;
+        }
+
+        if(won) {
+            cout << "Congratulations my man! The word was " << currentWord << "!!" << endl;
+
+        }
+        do {
+            cout << "Wanna play again? (y/n) ";
+            cin >> input;
+        } while (input != "y" && input != "n");
+        play = input == "y";
     }
 
+    cout << "See you later alligator " << endl;
+
     return 0;
+}
+
+bool isComplete(string currentWord) {
+    return (currentWord.find('-') == -1);
 }
 
 
