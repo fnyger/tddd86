@@ -1,3 +1,7 @@
+// Lets the user enter two words and returns a list
+// of words from the first word to the second where each words
+// only differs by one letter to its neighbours.
+
 #include <fstream>
 #include <iostream>
 #include <string>

@@ -1,3 +1,8 @@
+// Evil hangman
+// Plays hangman with the user. Being evil by not having a
+// chosen word and constantly picking a the hardest group of words
+// matching the guesses.
+
 #include <iostream>
 #include <string>
 #include <unordered_set>
