@@ -1,6 +1,10 @@
+
 // Lets the user enter two words and returns a list
 // of words from the first word to the second where each words
 // only differs by one letter to its neighbours.
+
+
+
 
 #include <fstream>
 #include <iostream>
@@ -17,8 +21,6 @@ unordered_set<string> createDict();
 stack<string> wordChain(string w1, string w2);
 bool validWord(string word, const unordered_set<string>& dictionary);
 bool used(string newWord, const unordered_set<string>& usedWords);
-
-
 
 
 int main() {
@@ -67,7 +69,7 @@ stack<string> wordChain(string w1, string w2) {
             return workStack;
         } else {
             string currentWord = workStack.top();
-            for(int i = 0; i < currentWord.length(); i++) {
+            for(unsigned int i = 0; i < currentWord.length(); i++) {
                 for(const char& c : ALPHABET) {
                     string newWord = currentWord;
                     newWord[i] = c;

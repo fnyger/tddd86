@@ -18,7 +18,7 @@ const string ALPHABET  = "abcdefghijklmnopqrstuvwxyz";
 void createDict(unordered_set<int>& wordLengths, list<string>& dict);
 bool wordLengthExists(int length, const unordered_set<int>& lengths);
 void keepLength(list<string>& dictionary, const unsigned int length);
-string largestWordFamily(char guess, list<string>& dict, string currentWord);
+void largestWordFamily(char guess, list<string>& dict, string& currentWord);
 bool isComplete(string currentWord);
 
 
@@ -75,11 +75,11 @@ int main() {
                 cin >> guess;
 
             } while (usedLetters.find(guess) != usedLetters.end());
-            currentWord = largestWordFamily(guess, dictionary, currentWord);
+                largestWordFamily(guess, dictionary, currentWord);
 
-            won = isComplete(currentWord);
-            guesses--;
-        }
+                won = isComplete(currentWord);
+                guesses--;
+            }
 
         if(won) {
             cout << "Congratulations my man! The word was " << currentWord << "!!" << endl;
@@ -97,12 +97,13 @@ int main() {
     return 0;
 }
 
+//Checks if the current word is a complete, has all letters.
 bool isComplete(string currentWord) {
-    return (currentWord.find('-') == std::string::npos);
+    return (currentWord.find('-') == string::npos);
 }
 
-
-string largestWordFamily(char guess, list<string>& dict, string currentWord) {
+//Finds the largest word family remaining after a letter has been guessed.
+void largestWordFamily(char guess, list<string>& dict, string& currentWord) {
     map<string, list<string>> families;
     for(list<string>::iterator it = dict.begin(); it != dict.end(); ++it) {
         string mapKey;
@@ -132,15 +133,16 @@ string largestWordFamily(char guess, list<string>& dict, string currentWord) {
             }
         }
         dict = largest;
+        currentWord = largestKey;
     }
-    return largestKey;
 }
 
-
+//Checks if the given word length exists.
 bool wordLengthExists(int length, const unordered_set<int>& lengths) {
     return lengths.count(length) >= 1;
 }
 
+//Keeps the words in the dictionary with the given length.
 void keepLength(list<string>& dictionary, const unsigned int length) {
     list<string> res;
     for(list<string>::iterator it = dictionary.begin(); it != dictionary.end(); ++it) {
@@ -152,7 +154,7 @@ void keepLength(list<string>& dictionary, const unsigned int length) {
 }
 
 
-
+//Creates a dictionary for text file and all lengths of the words in the text file.
 void createDict(unordered_set<int>& wordLengths, list<string>& dict) {
     ifstream input;
     input.open("dictionary.txt");
