@@ -1,4 +1,4 @@
-// Evil hangman
+// Evil hangman 
 // Plays hangman with the user. Being evil by not having a
 // chosen word and constantly picking a the hardest group of words
 // matching the guesses.
