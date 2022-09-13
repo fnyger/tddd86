@@ -47,6 +47,8 @@ int main() {
     return 0;
 }
 
+
+//Returns stack with chain of words between w1, w2
 stack<string> wordChain(string w1, string w2) {
 
     stack<string> startStack;
@@ -82,17 +84,22 @@ stack<string> wordChain(string w1, string w2) {
             }
         }
     }
+    return stack<string> {w1, w2};
 }
 
+// Returns whether word is in current dictionary
 bool validWord(string word, const unordered_set<string>& dictionary) {
     return dictionary.count(word) >= 1;
 
 }
 
+// Returns whether newWord is in unordered set usedWords
 bool used(string newWord, const unordered_set<string>& usedWords) {
     return usedWords.count(newWord) >= 1;
 }
 
+
+// Reads dictionary from dictionary.txt and puts in unordered set
 unordered_set<string> createDict() {
 
     ifstream input;
