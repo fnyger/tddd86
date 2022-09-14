@@ -86,7 +86,9 @@ stack<string> wordChain(string w1, string w2) {
             }
         }
     }
-    return stack<string> {w1, w2};
+    stack<string> empty;
+
+    return empty;
 }
 
 // Returns whether word is in current dictionary
