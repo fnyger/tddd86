@@ -11,7 +11,7 @@
 #include <fstream>
 using namespace std;
 
-Grid<string> createGrid(string filename);
+Grid<string> createGrid(string& filename);
 void printGrid(const Grid<string>& grid);
 void tick(Grid<string>& grid);
 int countNeighbours(const Grid<string> &grid, int y, int x);
@@ -51,6 +51,7 @@ int main() {
     return 0;
 }
 
+//Simulates one generation in game of life.
 void tick(Grid<string>& grid) {
     Grid<string> temp = grid;
     int width = grid.numCols();
@@ -70,6 +71,7 @@ void tick(Grid<string>& grid) {
     grid = temp;
 }
 
+//Counts neighbours to a given cell in the grid.
 int countNeighbours(const Grid<string>& grid, int y, int x) {
     int width = grid.numCols();
     int height = grid.numRows();
@@ -95,7 +97,7 @@ int countNeighbours(const Grid<string>& grid, int y, int x) {
 }
 
 
-
+//Prints the entire grid
 void printGrid(const Grid<string>& grid) {
     int width = grid.numCols();
     int height = grid.numRows();
@@ -108,8 +110,8 @@ void printGrid(const Grid<string>& grid) {
     }
 }
 
-
-Grid<string> createGrid(string filename) {
+//Creates the grid from a given file
+Grid<string> createGrid(string& filename) {
 
     ifstream input;
     input.open("../life/res/" + filename);
