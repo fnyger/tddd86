@@ -19,7 +19,7 @@ int main(int argc, char *argv[]) {
 
     QApplication a(argc, argv);
 
-    string filename = "germany15112.txt";
+    string filename = "tsp3.txt";
     ifstream input;
     input.open(filename);
 
@@ -46,7 +46,7 @@ int main(int argc, char *argv[]) {
     double y;
     while (input >> x >> y) {
         Point p(x, y);
-        tour.insertNearest(p);
+        tour.insertSmallest(p);
         //uncomment the 4 lines below to animate
 //        tour.draw(scene);
 //        std::chrono::milliseconds dura(1);
@@ -61,6 +61,8 @@ int main(int argc, char *argv[]) {
          << std::showpoint << tour.distance() << endl;
     cout << "Number of points: " << tour.size() << endl;
     tour.show();
+
+    cout << tour.distance() << endl;
 
     // draw tour
     tour.draw(scene);

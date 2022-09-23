@@ -17,7 +17,16 @@ Tour::Tour()
 
 Tour::~Tour()
 {
-    // TODO: write this member
+//    if(startNode == nullptr) {
+//        return;
+//    }
+//    Node* current = startNode->next;
+//    do {
+//        Node* temp = current;
+//        current = temp->next;
+//        delete temp;
+//    } while(current != startNode);
+//    delete startNode;
 }
 
 void Tour::show()
@@ -107,10 +116,36 @@ void Tour::insertNearest(Point p)
     Node* newNode = new Node(p, nearest->next);
     nearest->next = newNode;
 
-    // TODO: write this member
 }
 
 void Tour::insertSmallest(Point p)
 {
-    // TODO: write this member
+    Node* current = startNode;
+    if(current == nullptr) {
+        Node* newNode = new Node(p);
+        newNode->next = newNode;
+        startNode = newNode;
+        return;
+    }
+
+    double currDistance = startNode->point.distanceTo(startNode->next->point);
+    double newDistance = startNode->point.distanceTo(p) + startNode->next->point.distanceTo(p);
+    double bestDiff = newDistance - currDistance;
+
+    current = startNode->next;
+    Node* bestPre = startNode;
+    while(current != startNode) {
+        double currDistance = current->point.distanceTo(current->next->point);
+        double newDistance = current->point.distanceTo(p) + current->next->point.distanceTo(p);
+        double difference = newDistance - currDistance;
+
+        if(difference < bestDiff) {
+            bestPre = current;
+            bestDiff = difference;
+        }
+        current = current->next;
+    }
+
+    Node* newNode = new Node(p, bestPre->next);
+    bestPre->next = newNode;
 }
