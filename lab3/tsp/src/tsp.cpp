@@ -19,7 +19,7 @@ int main(int argc, char *argv[]) {
 
     QApplication a(argc, argv);
 
-    string filename = "tsp3.txt";
+    string filename = "tsp100.txt";
     ifstream input;
     input.open(filename);
 
@@ -47,10 +47,9 @@ int main(int argc, char *argv[]) {
     while (input >> x >> y) {
         Point p(x, y);
         tour.insertSmallest(p);
-        //uncomment the 4 lines below to animate
-//        tour.draw(scene);
-//        std::chrono::milliseconds dura(1);
-//        std::this_thread::sleep_for(dura);
+        tour.draw(scene);
+        std::chrono::milliseconds dura(50);
+        std::this_thread::sleep_for(dura);
         a.processEvents();
     }
 

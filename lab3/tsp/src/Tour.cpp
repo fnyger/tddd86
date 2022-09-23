@@ -1,8 +1,7 @@
-// This is the .cpp file you will edit and turn in.
-// We have provided a skeleton for you,
-// but you must finish it as described in the spec.
-// Also remove these comments here and add your own.
-// TODO: remove this comment header
+/*
+ * Tour.cpp implements the tour class behaviour declared in Tour.h
+ */
+
 
 #include <iostream>
 #include "Tour.h"
@@ -11,8 +10,6 @@
 
 Tour::Tour()
 {
-
-    // TODO: write this member
 }
 
 Tour::~Tour()
@@ -34,21 +31,20 @@ void Tour::show()
 
     Node* current = startNode;
     if(current == nullptr) {
-        cout << "fanns inga haha du är sämst" << endl;
+        cout << "No nodes" << endl;
         return;
     }
     do {
         std::cout << current->point.toString() << endl;
         current = current->next;
     } while(current != startNode);
-    // TODO: write this member
 }
 
 void Tour::draw(QGraphicsScene *scene)
 {
     Node* current = startNode;
     if(current == nullptr) {
-        cout << "fanns inga haha du är sämst" << endl;
+        cout << "No nodes" << endl;
         return;
     }
     do {
@@ -63,7 +59,7 @@ int Tour::size()
     int size = 0;
     Node* current = startNode;
     if(current == nullptr) {
-        cout << "fanns inga haha du är sämst" << endl;
+        cout << "No nodes" << endl;
         return 0;
     }
     do {
@@ -79,7 +75,7 @@ double Tour::distance()
     double distance = 0;
     Node* current = startNode;
     if(current == nullptr) {
-        cout << "fanns inga haha du är sämst" << endl;
+        cout << "No nodes" << endl;
         return distance;
     }    do {
         distance += current->point.distanceTo(current->next->point);

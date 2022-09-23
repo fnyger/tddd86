@@ -1,8 +1,7 @@
-// This is the .h file you will edit and turn in.
-// We have provided a skeleton for you,
-// but you must finish it as described in the spec.
-// Also remove these comments here and add your own, as well as on the members.
-// TODO: remove this comment header
+/*
+ * Tour is sequential collection of points.
+ *
+ */
 
 #ifndef TOUR_H
 #define TOUR_H
@@ -15,15 +14,39 @@ public:
 
     Tour();
     ~Tour();
+
+    /*
+     * Prints coordinates for each node to stdout
+     */
     void show();
+
+    /*
+     * Draws lines between neighbouring nodes to scene
+     */
     void draw(QGraphicsScene* scene);
+
+    /*
+     * Returns size of tour
+     */
     int size();
+
+    /*
+     * Returns total distance of tour
+     */
     double distance();
+
+    /*
+     * Insert point with the "nearest" heuristic
+     */
     void insertNearest(Point p);
+
+    /*
+     * Insert point with the "smallest" heuristic
+     */
     void insertSmallest(Point p);
 
 private:
-    Node* startNode = nullptr;
+    Node* startNode = nullptr; //Pointer to first node in the circular linked list
 };
 
 #endif // TOUR_H
