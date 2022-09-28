@@ -26,7 +26,7 @@ Tour::~Tour()
     delete startNode;
 }
 
-void Tour::show()
+void Tour::show() const
 {
 
     Node* current = startNode;
@@ -40,7 +40,7 @@ void Tour::show()
     } while(current != startNode);
 }
 
-void Tour::draw(QGraphicsScene *scene)
+void Tour::draw(QGraphicsScene *scene) const
 {
     Node* current = startNode;
     if(current == nullptr) {
@@ -54,7 +54,7 @@ void Tour::draw(QGraphicsScene *scene)
     // TODO: write this member
 }
 
-int Tour::size()
+int Tour::size() const
 {
     int size = 0;
     Node* current = startNode;
@@ -70,7 +70,7 @@ int Tour::size()
     // TODO: write this member
 }
 
-double Tour::distance()
+double Tour::distance() const
 {
     double distance = 0;
     Node* current = startNode;

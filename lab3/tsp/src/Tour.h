@@ -18,22 +18,22 @@ public:
     /*
      * Prints coordinates for each node to stdout
      */
-    void show();
+    void show() const;
 
     /*
      * Draws lines between neighbouring nodes to scene
      */
-    void draw(QGraphicsScene* scene);
+    void draw(QGraphicsScene* scene) const;
 
     /*
      * Returns size of tour
      */
-    int size();
+    int size() const;
 
     /*
      * Returns total distance of tour
      */
-    double distance();
+    double distance() const;
 
     /*
      * Insert point with the "nearest" heuristic
