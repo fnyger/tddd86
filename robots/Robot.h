@@ -14,6 +14,13 @@ class Robot : public Unit {
 
 public:
 
+    Robot();
+
+    /*
+    * Create unit at given point
+    */
+    Robot(const Point& p);
+
     /*
      * did not crash yet
      */

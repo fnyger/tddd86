@@ -7,10 +7,34 @@
 #include "constants.h"
 
 
+Junk::Junk(const Point& p):Robot(p){
+
+}
+
+Junk::Junk():Robot() {
+
+}
 
 
 void Junk::draw(QGraphicsScene *scene) const {
     Point corner = asPoint();
     scene->addEllipse(QRectF(corner.x * UNIT_WIDTH, corner.y * UNIT_HEIGHT,
                              JUNK_RADIUS, JUNK_RADIUS), QPen(), QBrush(JUNK_COLOR));
+}
+
+bool Junk::canMove() const{
+    return false;
+}
+
+void Junk::doCrash(){
+    return;
+}
+
+bool Junk::justCrashed() const{
+    return false;
+
+}
+
+void Junk::moveTowards(const Unit& u) {
+    return;
 }

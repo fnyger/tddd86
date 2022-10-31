@@ -37,6 +37,10 @@ void Unit::moveTowards(const Unit& u) {
     checkBounds();
 }
 
+void Unit::draw() {
+
+}
+
 void Unit::teleport() {
     x = rand_int (MIN_X, MAX_X);
     y = rand_int (MIN_Y, MAX_Y);
