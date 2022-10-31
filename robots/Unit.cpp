@@ -37,7 +37,7 @@ void Unit::moveTowards(const Unit& u) {
     checkBounds();
 }
 
-void Unit::draw() {
+void Unit::draw(QGraphicsScene* scene) const {
 
 }
 

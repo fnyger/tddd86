@@ -58,7 +58,8 @@ public:
     /*
      * Draw it
      */
-    virtual void draw();
+    virtual void draw(QGraphicsScene* scene) const;
+
 
 
 private:

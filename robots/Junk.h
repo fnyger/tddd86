@@ -19,7 +19,7 @@ public:
     /*
      * did not crash yet
      */
-    bool canMove() const;
+    virtual bool canMove() const;
 
     /*
      * Crashes and remembers it
@@ -32,14 +32,9 @@ public:
     bool justCrashed() const;
 
     /*
-     * Move towards unit
-     */
-    virtual void moveTowards(const Unit&);
-
-    /*
     * Draws this junk onto the given QGraphicsScene.
     */
-    void draw(QGraphicsScene* scene) const;
+    virtual void draw(QGraphicsScene* scene) const;
 
 };
 

@@ -24,7 +24,7 @@ public:
     /*
      * did not crash yet
      */
-    bool canMove() const;
+    virtual bool canMove() const;
 
     /*
      * Crashes and remembers it
@@ -40,7 +40,7 @@ public:
     /*
     * Draws this robot onto the given QGraphicsScene.
     */
-    void draw(QGraphicsScene* scene) const;
+    virtual void draw(QGraphicsScene* scene) const;
 
 
 };

@@ -16,11 +16,12 @@ Junk::Junk():Robot() {
 }
 
 
-void Junk::draw(QGraphicsScene *scene) const {
+void Junk::draw(QGraphicsScene *scene) const{
     Point corner = asPoint();
     scene->addEllipse(QRectF(corner.x * UNIT_WIDTH, corner.y * UNIT_HEIGHT,
                              JUNK_RADIUS, JUNK_RADIUS), QPen(), QBrush(JUNK_COLOR));
 }
+
 
 bool Junk::canMove() const{
     return false;
@@ -35,6 +36,3 @@ bool Junk::justCrashed() const{
 
 }
 
-void Junk::moveTowards(const Unit& u) {
-    return;
-}
