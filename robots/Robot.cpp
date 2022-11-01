@@ -6,15 +6,9 @@
 #include "Robot.h"
 #include "constants.h"
 
-Robot::Robot():Unit() {
+Robot::Robot():Unit() {}
 
-}
-Robot::Robot(const Point& p):Unit(p) {
-}
-
-Robot* Robot::clone() const {
-    return new Robot{ *this };
-}
+Robot::Robot(const Point& p):Unit(p) {}
 
 bool Robot::canMove() const{
     return !crashed;
@@ -28,7 +22,6 @@ bool Robot::justCrashed() const{
     return crashed;
 
 }
-
 
 void Robot::draw(QGraphicsScene *scene) const {
     Point corner = asPoint();

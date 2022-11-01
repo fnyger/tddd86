@@ -25,8 +25,15 @@ public:
      */
     GameState(int numberOfRobots);
 
+    /*
+     * Deletes robots from the heap
+     */
     ~GameState();
 
+    /*
+     * Copy another gameState, without overlapping hero
+     */
+    GameState(const GameState& other);
 
     /*
      * Clear and redraw entire playing field
@@ -78,6 +85,9 @@ public:
      */
     Point getHeroAsPoint () const;
 
+    /*
+     * Copies GameState to other via assignment
+     */
     const GameState& operator= (const GameState& other);
 
 

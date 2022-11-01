@@ -29,6 +29,14 @@ GameState::~GameState() {
     robots.clear();
 }
 
+GameState::GameState(const GameState& other) {
+    for (unsigned i = 0; i < other.robots.size(); i++) {
+        robots.push_back(new Robot(other.robots[i]->asPoint()));
+
+    }
+    hero = other.hero;
+}
+
 void GameState::draw(QGraphicsScene *scene) const {
     scene->clear();
     hero.draw(scene);
@@ -125,10 +133,7 @@ const GameState& GameState::operator= (const GameState& other) {
             robots.push_back(new Robot(other.robots[i]->asPoint()));
 
         }
-
-
-
-
+        hero = other.hero;
     }
     return *this;
 }

@@ -14,16 +14,20 @@ class Robot : public Unit {
 
 public:
 
+    /*
+     * Create robot
+     */
     Robot();
 
-    ~Robot() override = default;
-
-    virtual Robot* clone() const;
-
     /*
-    * Create unit at given point
+    * Create robot at given point
     */
     Robot(const Point& p);
+
+    /*
+     * Deletes robot
+     */
+    ~Robot() override = default;
 
     /*
      * did not crash yet
@@ -44,10 +48,8 @@ public:
     /*
     * Draws this robot onto the given QGraphicsScene.
     */
-    void draw(QGraphicsScene* scene) const;
+    void draw(QGraphicsScene* scene) const override;
 
-private:
-    Robot& operator= (const Robot&) = delete;
 };
 
 #endif // ROBOT_H

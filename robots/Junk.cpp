@@ -7,17 +7,8 @@
 #include "constants.h"
 
 
-Junk::Junk(const Point& p):Robot(p){
+Junk::Junk(const Point& p):Robot(p){}
 
-}
-
-Junk::Junk():Robot() {
-
-}
-
-Junk* Junk::clone() const {
-    return new Junk{ *this };
-}
 
 void Junk::draw(QGraphicsScene *scene) const{
     Point corner = asPoint();
