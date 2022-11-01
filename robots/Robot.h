@@ -30,6 +30,11 @@ public:
     ~Robot() override = default;
 
     /*
+     * Clones Robot object
+     */
+    virtual Robot* clone() const;
+
+    /*
      * did not crash yet
      */
     virtual bool canMove() const;

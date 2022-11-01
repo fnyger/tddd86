@@ -32,7 +32,6 @@ GameState::~GameState() {
 GameState::GameState(const GameState& other) {
     for (unsigned i = 0; i < other.robots.size(); i++) {
         robots.push_back(new Robot(other.robots[i]->asPoint()));
-
     }
     hero = other.hero;
 }
@@ -130,7 +129,7 @@ const GameState& GameState::operator= (const GameState& other) {
         }
         robots.clear();
         for (unsigned i = 0; i < other.robots.size(); i++) {
-            robots.push_back(new Robot(other.robots[i]->asPoint()));
+            robots.push_back(other.robots[i]->clone());
 
         }
         hero = other.hero;

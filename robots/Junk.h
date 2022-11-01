@@ -17,11 +17,15 @@ public:
      */
     Junk(const Point& p);
 
-
     /*
      * Delete junk
      */
     ~Junk() override = default;
+
+    /*
+     * Clones junk object
+     */
+    Junk* clone() const;
 
     /*
      * did not crash yet
