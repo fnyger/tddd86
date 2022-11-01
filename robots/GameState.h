@@ -78,7 +78,9 @@ public:
      */
     Point getHeroAsPoint () const;
 
-    const GameState& operator= (const GameState&);
+    const GameState& operator= (const GameState& other);
+
+
 
 private:
     //std::vector<Robot> robots;  // the robots

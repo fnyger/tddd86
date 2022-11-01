@@ -114,10 +114,17 @@ bool GameState::isEmpty(const Unit& unit) const {
     return true;
 }
 
-const GameState& GameState::operator= (const GameState& g) {
-    if (this == &g) return *this;
 
-    delete this;
-    return g;
+const GameState& GameState::operator= (const GameState& other) {
+    if (this != &other) {
+        for (Robot *robot: robots) {
+            delete robot;
+        }
+        int i = 0;
+        for (Robot *robot: other.robots) {
+            robots[i++] = new Robot(robot->asPoint());
+        }
+    }
+    return *this;
 }
 
