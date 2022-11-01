@@ -15,6 +15,9 @@ Junk::Junk():Robot() {
 
 }
 
+Junk* Junk::clone() const {
+    return new Junk{ *this };
+}
 
 void Junk::draw(QGraphicsScene *scene) const{
     Point corner = asPoint();

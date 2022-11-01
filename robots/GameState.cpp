@@ -14,11 +14,19 @@ GameState::GameState(int numberOfRobots) {
    for (int i = 0; i < numberOfRobots; i++) {
         Robot* robot = new Robot();
         while(!isEmpty(*robot)){
+            delete robot;
             robot = new Robot();
         }
         robots.push_back(robot);
     }
     teleportHero();
+}
+
+GameState::~GameState() {
+    for(Robot *robot: robots) {
+        delete robot;
+    }
+    robots.clear();
 }
 
 void GameState::draw(QGraphicsScene *scene) const {
@@ -65,6 +73,7 @@ void GameState::junkTheCrashed(){
     for(unsigned i=0; i < robots.size(); ++i){
         if (robots[i]->justCrashed()) {
             Junk* newJunk = new Junk(robots[i]->asPoint());
+            delete robots[i];
             robots[i] = newJunk; //mad memory leakage when old robot not removed
         }
     }
@@ -103,5 +112,12 @@ bool GameState::isEmpty(const Unit& unit) const {
             return false;
 
     return true;
+}
+
+const GameState& GameState::operator= (const GameState& g) {
+    if (this == &g) return *this;
+
+    delete this;
+    return g;
 }
 

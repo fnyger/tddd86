@@ -16,6 +16,10 @@ public:
 
     Robot();
 
+    ~Robot() override = default;
+
+    virtual Robot* clone() const;
+
     /*
     * Create unit at given point
     */
@@ -40,9 +44,10 @@ public:
     /*
     * Draws this robot onto the given QGraphicsScene.
     */
-    virtual void draw(QGraphicsScene* scene) const;
+    void draw(QGraphicsScene* scene) const;
 
-
+private:
+    Robot& operator= (const Robot&) = delete;
 };
 
 #endif // ROBOT_H

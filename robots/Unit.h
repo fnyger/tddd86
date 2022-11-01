@@ -26,7 +26,7 @@ public:
     */
     Unit(const Point& p);
 
-    virtual ~Unit(){}
+    virtual ~Unit() {}
 
     /*
     * Return Point representation of Unit

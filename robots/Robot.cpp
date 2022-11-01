@@ -12,6 +12,10 @@ Robot::Robot():Unit() {
 Robot::Robot(const Point& p):Unit(p) {
 }
 
+Robot* Robot::clone() const {
+    return new Robot{ *this };
+}
+
 bool Robot::canMove() const{
     return !crashed;
 }

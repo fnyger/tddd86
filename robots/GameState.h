@@ -25,7 +25,7 @@ public:
      */
     GameState(int numberOfRobots);
 
-    ~GameState() = default;
+    ~GameState();
 
 
     /*
@@ -78,6 +78,8 @@ public:
      */
     Point getHeroAsPoint () const;
 
+    const GameState& operator= (const GameState&);
+
 private:
     //std::vector<Robot> robots;  // the robots
     //std::vector<Junk> junks;    // robots that have turned to junk
@@ -86,6 +88,8 @@ private:
 
     // private helpers
     bool isEmpty(const Unit& unit) const;
+
+
 
 };
 

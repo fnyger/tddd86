@@ -16,10 +16,14 @@ public:
 
     Junk();
 
+    Junk* clone() const;
+
+    ~Junk() override = default;
+
     /*
      * did not crash yet
      */
-    virtual bool canMove() const;
+    bool canMove() const;
 
     /*
      * Crashes and remembers it
@@ -34,8 +38,10 @@ public:
     /*
     * Draws this junk onto the given QGraphicsScene.
     */
-    virtual void draw(QGraphicsScene* scene) const;
+    void draw(QGraphicsScene* scene) const;
 
+private:
+    Junk& operator= (const Junk&) = delete;
 };
 
 #endif // JUNK_H
