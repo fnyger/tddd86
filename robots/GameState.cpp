@@ -120,10 +120,15 @@ const GameState& GameState::operator= (const GameState& other) {
         for (Robot *robot: robots) {
             delete robot;
         }
-        int i = 0;
-        for (Robot *robot: other.robots) {
-            robots[i++] = new Robot(robot->asPoint());
+        robots.clear();
+        for (unsigned i = 0; i < other.robots.size(); i++) {
+            robots.push_back(new Robot(other.robots[i]->asPoint()));
+
         }
+
+
+
+
     }
     return *this;
 }
