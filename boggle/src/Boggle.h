@@ -7,6 +7,7 @@
 #ifndef _boggle_h
 #define _boggle_h
 
+#include <grid.h>
 #include <iostream>
 #include <string>
 // TODO: include any other header files you need
@@ -14,14 +15,24 @@
 using namespace std;
 
 class Boggle {
+
+    struct Cube {
+        char letter;
+        bool visited;
+    };
+
 public:
     const string DICTIONARY_FILE = "EnglishWords.dat";
     const int MIN_WORD_LENGTH = 4;
     const int BOARD_SIZE = 4;
 
+    void initiateBoard();
+    void printBoard();
+
     // TODO: decide the public member functions and declare them
 
 private:
+    Grid<Cube*> board;
     // TODO: decide the private member variables/functions and declare them
 
 };

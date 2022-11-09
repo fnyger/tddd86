@@ -10,7 +10,8 @@ CONFIG += no_include_pwd
 SOURCES = $$PWD/src/*.cpp
 SOURCES += $$PWD/lib/StanfordCPPLib/*.cpp
 
-HEADERS = $$PWD/src/*.h
+HEADERS = $$PWD/src/*.h \
+    src/cube.h
 HEADERS += $$PWD/lib/StanfordCPPLib/*.h
 
 # GCC defaults to not warning about failing to return from a non-void function

@@ -19,4 +19,39 @@ static string CUBES[NUM_CUBES] = {        // the letters on all 6 sides of every
    "EIOSST", "ELRTTY", "HIMNQU", "HLNNRZ"
 };
 
+void Boggle::initiateBoard(string board) {
+    board.resize(4, 4);
+    int cubeI = 0;
+    for (int y=0; y<4; y++) {
+        for (int x=0; x<4; x++) {
+            char faceUp = CUBES[cubeI][randomInteger(0,CUBE_SIDES-1)];
+            cubeI++;
+            Cube *cube = new Cube;
+            cube->letter = faceUp;
+            cube->visited = false;
+            board.set(y,x, cube);
+        }
+    }
+    shuffle(board);
+}
+
+void Boggle::initiateBoardPlayer(string conf) {
+    initiateBoard();
+    int letterI = 0;
+    for (int y=0; y<4; y++) {
+        for (int x=0; x<4; x++) {
+            board.get(y,x)->letter = conf[letterI++];
+        }
+    }
+}
+
+void Boggle::printBoard() {
+    cout << endl;
+    for (int y=0; y<4; y++) {
+        for (int x=0; x<4; x++) {
+                cout << board.get(y, x)->letter << " ";
+        }
+        cout << endl;
+    }
+}
 // TODO: implement the members you declared in Boggle.h
