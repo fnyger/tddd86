@@ -16,10 +16,11 @@
  */
 void playOneGame(Boggle& boggle) {
     // TODO: implement this function (and add any other functions you like to help you)
-    string boardConf;
     if(yesOrNo("vill du använda eget bräde? (Y/N)")) {
-        cout << "Write 16 character long string";
-        boggle.initiateBoardPlayer(string boardConf);
+        cout << "Write 16 character long string: ";
+        string boardConf;
+        cin >> boardConf;
+        boggle.initiateBoardPlayer(boardConf);
     } else {
         boggle.initiateBoard();
     }

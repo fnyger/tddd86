@@ -22,12 +22,30 @@ class Boggle {
     };
 
 public:
+    /*
+     * Deletes cubes on board from heap
+     */
+    ~Boggle();
+
     const string DICTIONARY_FILE = "EnglishWords.dat";
     const int MIN_WORD_LENGTH = 4;
     const int BOARD_SIZE = 4;
 
+    /*
+     * Initiates board with shuffled cubes
+     */
     void initiateBoard();
-    void printBoard();
+
+    /*
+     * Prints board
+     */
+    void printBoard() const;
+
+    /*
+     * Initiates board with letters from player config.
+     * Expects string of length 16
+     */
+    void initiateBoardPlayer(string conf);
 
     // TODO: decide the public member functions and declare them
 

@@ -19,7 +19,15 @@ static string CUBES[NUM_CUBES] = {        // the letters on all 6 sides of every
    "EIOSST", "ELRTTY", "HIMNQU", "HLNNRZ"
 };
 
-void Boggle::initiateBoard(string board) {
+Boggle::~Boggle() {
+    for (int y=0; y<board.nRows - 1; y++) {
+        for (int x=0; x<board.nCols - 1; x++) {
+            delete board.get(y,x);
+        }
+    }
+}
+
+void Boggle::initiateBoard() {
     board.resize(4, 4);
     int cubeI = 0;
     for (int y=0; y<4; y++) {
@@ -38,18 +46,19 @@ void Boggle::initiateBoard(string board) {
 void Boggle::initiateBoardPlayer(string conf) {
     initiateBoard();
     int letterI = 0;
-    for (int y=0; y<4; y++) {
-        for (int x=0; x<4; x++) {
+    for (int y=0; y<board.nRows - 1; y++) {
+        for (int x=0; x<board.nCols - 1; x++) {
             board.get(y,x)->letter = conf[letterI++];
         }
     }
 }
 
-void Boggle::printBoard() {
+void Boggle::printBoard() const {
     cout << endl;
-    for (int y=0; y<4; y++) {
-        for (int x=0; x<4; x++) {
-                cout << board.get(y, x)->letter << " ";
+    for (int y=0; y < board.nRows - 1; y++) {
+        for (int x=0; x < board.nCols - 1; x++) {
+            char letter = board.get(y,x)->letter;
+            cout << board.get(y, x)->letter << " ";
         }
         cout << endl;
     }
