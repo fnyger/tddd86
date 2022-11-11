@@ -46,8 +46,8 @@ void Boggle::initiateBoard() {
 void Boggle::initiateBoardPlayer(string conf) {
     initiateBoard();
     int letterI = 0;
-    for (int y=0; y<board.nRows - 1; y++) {
-        for (int x=0; x<board.nCols - 1; x++) {
+    for (int y=0; y<board.nRows; y++) {
+        for (int x=0; x<board.nCols; x++) {
             board.get(y,x)->letter = conf[letterI++];
         }
     }
@@ -55,8 +55,8 @@ void Boggle::initiateBoardPlayer(string conf) {
 
 void Boggle::printBoard() const {
     cout << endl;
-    for (int y=0; y < board.nRows - 1; y++) {
-        for (int x=0; x < board.nCols - 1; x++) {
+    for (int y=0; y < board.nRows; y++) {
+        for (int x=0; x < board.nCols; x++) {
             char letter = board.get(y,x)->letter;
             cout << board.get(y, x)->letter << " ";
         }
