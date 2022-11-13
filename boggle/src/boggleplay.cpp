@@ -16,7 +16,7 @@
  */
 void playOneGame(Boggle& boggle) {
     // TODO: implement this function (and add any other functions you like to help you)
-    if(yesOrNo("vill du använda eget bräde? (Y/N)")) {
+    if(!yesOrNo("Do you want to generate a random board?")) {
         cout << "Write 16 character long string: ";
         string boardConf;
         cin >> boardConf;
@@ -24,7 +24,38 @@ void playOneGame(Boggle& boggle) {
     } else {
         boggle.initiateBoard();
     }
+    cout << "It's your turn!" << endl;
     boggle.printBoard();
+    bool userTurn = true;
+    while(userTurn) {
+
+        cout << "Your words (" << boggle.getWords().size() << "): " << //
+                boggle.getWords() << endl;
+        cout << "Your score: " << boggle.getScore() << endl;
+        cout << "Type a word (or press Enter to end your turn): ";
+        string word;
+        getline(cin, word);
+        word = toUpperCase(word);
+        if (word.empty()) {
+            userTurn = false;
+        } else if (word.length() < 4) {
+            cout << "That word is not long enough." << endl;
+        } else if (boggle.getWords().contains(word)) {
+            cout << "You have already guessed that word." << endl;
+        } else if (!boggle.getLexicon().contains(word)) {
+            cout << "That word is not in the dictionary." << endl;
+        } else {
+            cout << "You found a new word! \"" << word << "\"" << endl;
+            boggle.addWord(word);
+            boggle.addScore(word.length()-3);
+        }
+
+
+        boggle.printBoard();
+    }
+    cout << "It's my turn!" << endl;
+
+
 }
 
 /*

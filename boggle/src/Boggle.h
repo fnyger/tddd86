@@ -10,6 +10,8 @@
 #include <grid.h>
 #include <iostream>
 #include <string>
+#include <set.h>
+#include <lexicon.h>
 // TODO: include any other header files you need
 
 using namespace std;
@@ -47,10 +49,25 @@ public:
      */
     void initiateBoardPlayer(string conf);
 
+    Set<string> getWords() const;
+
+    int getScore() const;
+
+    void addScore(int num);
+
+    void addWord(string word);
+
+    Lexicon getLexicon() const;
+
+    bool wordCanBeFormed(string word) const;
+
     // TODO: decide the public member functions and declare them
 
 private:
     Grid<Cube*> board;
+    int score = 0;
+    Set<string> words;
+    Lexicon english = Lexicon("EnglishWords.dat");
     // TODO: decide the private member variables/functions and declare them
 
 };

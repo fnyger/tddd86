@@ -9,6 +9,8 @@
 #include "random.h"
 #include "shuffle.h"
 #include "strlib.h"
+#include "set.h"
+#include "lexicon.h"
 
 static const int NUM_CUBES = 16;   // the number of cubes in the game
 static const int CUBE_SIDES = 6;   // the number of sides on each cube
@@ -54,13 +56,37 @@ void Boggle::initiateBoardPlayer(string conf) {
 }
 
 void Boggle::printBoard() const {
-    cout << endl;
     for (int y=0; y < board.nRows; y++) {
         for (int x=0; x < board.nCols; x++) {
-            char letter = board.get(y,x)->letter;
+            //char letter = board.get(y,x)->letter;
             cout << board.get(y, x)->letter << " ";
         }
         cout << endl;
     }
+    cout << endl;
+}
+
+Set<string> Boggle::getWords() const {
+    return words;
+}
+
+int Boggle::getScore() const {
+    return score;
+}
+
+void Boggle::addScore(int num) {
+    score += num;
+}
+
+void Boggle::addWord(string word) {
+    words.add(word);
+}
+
+Lexicon Boggle::getLexicon() const {
+    return english;
+}
+
+bool Boggle::wordCanBeFormed(string word) const {
+    return true;
 }
 // TODO: implement the members you declared in Boggle.h
