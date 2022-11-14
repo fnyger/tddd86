@@ -49,24 +49,31 @@ public:
      */
     void initiateBoardPlayer(string conf);
 
-    Set<string> getWords() const;
+    Set<string> getPlayerWords() const;
 
-    int getScore() const;
+    int getPlayerScore() const;
 
-    void addScore(int num);
+    void addPlayerScore(int num);
 
-    void addWord(string word);
+    void addPlayerWord(string word);
 
     Lexicon getLexicon() const;
 
-    bool wordCanBeFormed(string word) const;
+    bool wordCanBeFormed(string word);
+
+    void mapGrid();
+
+    Map<char, int> getLettersMapped() const;
+
+    Map<char, int> mapWord(string word);
 
     // TODO: decide the public member functions and declare them
 
 private:
     Grid<Cube*> board;
-    int score = 0;
-    Set<string> words;
+    Map<char, int> lettersMapped;
+    int playerScore = 0;
+    Set<string> playerWords;
     Lexicon english = Lexicon("EnglishWords.dat");
     // TODO: decide the private member variables/functions and declare them
 

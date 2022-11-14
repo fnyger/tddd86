@@ -66,27 +66,63 @@ void Boggle::printBoard() const {
     cout << endl;
 }
 
-Set<string> Boggle::getWords() const {
-    return words;
+Set<string> Boggle::getPlayerWords() const {
+    return playerWords;
 }
 
-int Boggle::getScore() const {
-    return score;
+int Boggle::getPlayerScore() const {
+    return playerScore;
 }
 
-void Boggle::addScore(int num) {
-    score += num;
+void Boggle::addPlayerScore(int num) {
+    playerScore += num;
 }
 
-void Boggle::addWord(string word) {
-    words.add(word);
+void Boggle::addPlayerWord(string word) {
+    playerWords.add(word);
 }
 
 Lexicon Boggle::getLexicon() const {
     return english;
 }
 
-bool Boggle::wordCanBeFormed(string word) const {
+void Boggle::mapGrid() {
+    for (int y=0; y < board.nRows; y++) {
+        for (int x=0; x < board.nCols; x++) {
+            if (!lettersMapped.containsKey(board.get(y,x)->letter)) {
+                lettersMapped.put(board.get(y,x)->letter, 1);
+            } else {
+                lettersMapped[board.get(y,x)->letter] = //
+                        lettersMapped.get(board.get(y,x)->letter)+1;
+            }
+        }
+    }
+}
+
+Map<char, int> Boggle::mapWord(string word) {
+    Map<char, int> wordMapped;
+    for (char letter : word) {
+        if (!wordMapped.containsKey(letter)) {
+            wordMapped.put(letter, 1);
+        } else {
+            wordMapped[letter] = wordMapped.get(letter) + 1;
+        }
+    }
+    return wordMapped;
+}
+
+bool Boggle::wordCanBeFormed(string word) {
+    cout << "test" << endl;
+    Map<char, int> wordMapped = mapWord(word);
+    for (char letter : wordMapped) {
+        if (!lettersMapped.containsKey(letter)  || lettersMapped[letter] < wordMapped[letter]) {
+            return false;
+        }
+    }
     return true;
+}
+
+Map<char, int> Boggle::getLettersMapped() const {
+   return lettersMapped;
 }
 // TODO: implement the members you declared in Boggle.h

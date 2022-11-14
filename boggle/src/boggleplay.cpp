@@ -9,6 +9,7 @@
 #include "Boggle.h"
 #include "bogglemain.h"
 #include "strlib.h"
+#include "map.h"
 // TODO: include any other header files you need
 
 /*
@@ -24,14 +25,16 @@ void playOneGame(Boggle& boggle) {
     } else {
         boggle.initiateBoard();
     }
+    boggle.mapGrid();
     cout << "It's your turn!" << endl;
     boggle.printBoard();
+
     bool userTurn = true;
     while(userTurn) {
 
-        cout << "Your words (" << boggle.getWords().size() << "): " << //
-                boggle.getWords() << endl;
-        cout << "Your score: " << boggle.getScore() << endl;
+        cout << "Your words (" << boggle.getPlayerWords().size() << "): " << //
+                boggle.getPlayerWords() << endl;
+        cout << "Your score: " << boggle.getPlayerScore() << endl;
         cout << "Type a word (or press Enter to end your turn): ";
         string word;
         getline(cin, word);
@@ -40,14 +43,16 @@ void playOneGame(Boggle& boggle) {
             userTurn = false;
         } else if (word.length() < 4) {
             cout << "That word is not long enough." << endl;
-        } else if (boggle.getWords().contains(word)) {
+        } else if (boggle.getPlayerWords().contains(word)) {
             cout << "You have already guessed that word." << endl;
         } else if (!boggle.getLexicon().contains(word)) {
             cout << "That word is not in the dictionary." << endl;
+        } else if (!boggle.wordCanBeFormed(word)) {
+            cout << "That word can't be formed on this board." << endl;
         } else {
             cout << "You found a new word! \"" << word << "\"" << endl;
-            boggle.addWord(word);
-            boggle.addScore(word.length()-3);
+            boggle.addPlayerWord(word);
+            boggle.addPlayerScore(word.length()-3);
         }
 
 
