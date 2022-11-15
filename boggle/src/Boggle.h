@@ -49,23 +49,42 @@ public:
      */
     void initiateBoardPlayer(string conf);
 
+    /*
+     * Get set of player words
+     */
     Set<string> getPlayerWords() const;
 
     Set<string> getComputerWords() const;
 
-    int getPlayerScore() const;
-
     int getComputerScore() const;
-
-    void addPlayerScore(int num);
 
     void addComputerScore(int num);
 
+    /*
+     * Get player score
+     */
+    int getPlayerScore() const;
+
+    /*
+     * Increase player score
+     */
+    void addPlayerScore(int num);
+
+
+    /*
+     * Append player word
+     */
     void addPlayerWord(string word);
 
+   /*
+    * Get english lexicon
+    */
     Lexicon getLexicon() const;
 
-    bool wordCanBeFormed(string word);  
+    /*
+     * Returns if word can be formed on board
+     */
+    bool wordCanBeFormed(string word);
 
     void resetVisited();
 
@@ -75,16 +94,37 @@ public:
 
     void resetComputer();
 
+
+
 private:
-    bool helpCanBeFormed(int yCenter, int xCenter, string word, Grid<Cube> localBoard);
     void addWordsFromBoard();
 
     void wordFromCube(int yCenter, int xCenter, string prefix, Grid<Cube> localBoard);
+    /*
+     * Helper function for can be formed
+     */
+    bool helpCanBeFormed(int yCenter, int xCenter, string word, Grid<Cube> localBoard);
+
+    /*
+     * The board
+     */
     Grid<Cube*> board;
+
+    /*
+     * Player score
+     */
     int playerScore = 0;
     int computerScore = 0;
-    Set<string> playerWords;
     Set<string> computerWords;
+
+    /*
+     * Set of entered player words
+     */
+    Set<string> playerWords;
+
+    /*
+     * The english lexicon
+     */
     Lexicon english = Lexicon("EnglishWords.dat");
     // TODO: decide the private member variables/functions and declare them
 
