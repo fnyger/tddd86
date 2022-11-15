@@ -1,8 +1,7 @@
-// This is the .cpp file you will edit and turn in.
-// We have provided a minimal skeleton for you,
-// but you must finish it as described in the spec.
-// Also remove these comments here and add your own.
-// TODO: remove this comment header and replace it with your own
+/*
+ * This file implements the boggle game.
+ *
+ */
 
 #include <sstream>
 #include "Boggle.h"
@@ -150,10 +149,6 @@ void Boggle::resetVisited() {
 }
 
 void Boggle::playComputer() {
-    addWordsFromBoard();
-}
-
-void Boggle::addWordsFromBoard() {
     for (int y=0; y<board.nRows; y++) {
         for (int x=0; x<board.nCols; x++) {
             //board[y][x]->visited = true;

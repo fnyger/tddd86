@@ -54,10 +54,19 @@ public:
      */
     Set<string> getPlayerWords() const;
 
+    /*
+     * Get set of computer words
+     */
     Set<string> getComputerWords() const;
 
+    /*
+     * Get computers score
+     */
     int getComputerScore() const;
 
+    /*
+     * Increase computers score
+     */
     void addComputerScore(int num);
 
     /*
@@ -86,20 +95,35 @@ public:
      */
     bool wordCanBeFormed(string word);
 
+    /*
+     * Reset visited on all cubes in board
+     */
     void resetVisited();
 
+    /*
+     * Let the computer play its turn
+     */
     void playComputer();
 
+    /*
+     * Reset the players score and entered words
+     */
     void resetPlayer();
 
+    /*
+     * Reset the computers score and entered words
+     */
     void resetComputer();
 
 
 
 private:
-    void addWordsFromBoard();
 
+    /*
+     * Add all words from current board
+     */
     void wordFromCube(int yCenter, int xCenter, string prefix, Grid<Cube> localBoard);
+
     /*
      * Helper function for can be formed
      */
@@ -114,7 +138,15 @@ private:
      * Player score
      */
     int playerScore = 0;
+
+    /*
+     * Computers score
+     */
     int computerScore = 0;
+
+    /*
+     * Computers entered words
+     */
     Set<string> computerWords;
 
     /*

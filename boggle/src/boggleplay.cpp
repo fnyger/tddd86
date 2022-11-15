@@ -1,6 +1,7 @@
-// You will edit and turn in this CPP file.
-// Also remove these comments here and add your own.
-// TODO: remove this comment header and replace with your own
+/*
+ * This file handles the I/O with the player through the terminal
+ *
+ */
 
 #include <cstdlib>
 #include <iostream>
