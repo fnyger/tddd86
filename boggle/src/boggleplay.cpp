@@ -17,7 +17,7 @@
  */
 void playOneGame(Boggle& boggle) {
     // TODO: implement this function (and add any other functions you like to help you)
-    if(!yesOrNo("Do you want to generate a random board?")) {
+    if(!yesOrNo("Do you want to generate a random board? (y/n) ")) {
         cout << "Write 16 character long string: ";
         string boardConf;
         cin >> boardConf;
@@ -38,6 +38,7 @@ void playOneGame(Boggle& boggle) {
         string word;
         getline(cin, word);
         word = toUpperCase(word);
+        clearConsole();
         if (word.empty()) {
             userTurn = false;
         } else if (word.length() < 4) {
