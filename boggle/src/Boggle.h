@@ -51,26 +51,40 @@ public:
 
     Set<string> getPlayerWords() const;
 
+    Set<string> getComputerWords() const;
+
     int getPlayerScore() const;
 
+    int getComputerScore() const;
+
     void addPlayerScore(int num);
+
+    void addComputerScore(int num);
 
     void addPlayerWord(string word);
 
     Lexicon getLexicon() const;
 
-    bool wordCanBeFormed(string word);
-
-    bool helpCanBeFormed(int yCenter, int xCenter, string word);
+    bool wordCanBeFormed(string word);  
 
     void resetVisited();
 
-    // TODO: decide the public member functions and declare them
+    void playComputer();
+
+    void resetPlayer();
+
+    void resetComputer();
 
 private:
+    bool helpCanBeFormed(int yCenter, int xCenter, string word, Grid<Cube> localBoard);
+    void addWordsFromBoard();
+
+    void wordFromCube(int yCenter, int xCenter, string prefix, Grid<Cube> localBoard);
     Grid<Cube*> board;
     int playerScore = 0;
+    int computerScore = 0;
     Set<string> playerWords;
+    Set<string> computerWords;
     Lexicon english = Lexicon("EnglishWords.dat");
     // TODO: decide the private member variables/functions and declare them
 

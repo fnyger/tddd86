@@ -9,7 +9,6 @@
 #include "Boggle.h"
 #include "bogglemain.h"
 #include "strlib.h"
-#include "map.h"
 // TODO: include any other header files you need
 
 /*
@@ -20,7 +19,8 @@ void playOneGame(Boggle& boggle) {
     if(!yesOrNo("Do you want to generate a random board?")) {
         cout << "Write 16 character long string: ";
         string boardConf;
-        cin >> boardConf;
+        getline(cin, boardConf);
+        boardConf = toUpperCase(boardConf);
         boggle.initiateBoardPlayer(boardConf);
     } else {
         boggle.initiateBoard();
@@ -56,10 +56,17 @@ void playOneGame(Boggle& boggle) {
 
 
         boggle.printBoard();
+
+
     }
     cout << "It's my turn!" << endl;
-
-
+    boggle.playComputer();
+    cout << "My words (" << boggle.getComputerWords().size() << "): " << //
+            boggle.getComputerWords() << endl;
+    cout << "My score: " << boggle.getComputerScore() << endl;
+    cout << "Ha ha ha, I destroyed you. Better luck next time, puny human!" << endl;
+    boggle.resetPlayer();
+    boggle.resetComputer();
 }
 
 /*

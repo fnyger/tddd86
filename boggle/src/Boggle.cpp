@@ -22,8 +22,8 @@ static string CUBES[NUM_CUBES] = {        // the letters on all 6 sides of every
 };
 
 Boggle::~Boggle() {
-    for (int y=0; y<board.nRows - 1; y++) {
-        for (int x=0; x<board.nCols - 1; x++) {
+    for (int y=0; y<board.nRows; y++) {
+        for (int x=0; x<board.nCols; x++) {
             delete board.get(y,x);
         }
     }
@@ -70,12 +70,24 @@ Set<string> Boggle::getPlayerWords() const {
     return playerWords;
 }
 
+Set<string> Boggle::getComputerWords() const {
+    return computerWords;
+}
+
 int Boggle::getPlayerScore() const {
     return playerScore;
 }
 
+int Boggle::getComputerScore() const {
+    return computerScore;
+}
+
 void Boggle::addPlayerScore(int num) {
     playerScore += num;
+}
+
+void Boggle::addComputerScore(int num) {
+    computerScore += num;
 }
 
 void Boggle::addPlayerWord(string word) {
@@ -92,9 +104,15 @@ bool Boggle::wordCanBeFormed(string word) {
     for (int y=0; y < board.nRows; y++) {
         for (int x=0; x < board.nCols; x++) {
            if (board.get(y, x)->letter == word[0]) {
-               word.erase(0);
-               board[y][x]->visited = true;
-               bool canBeFormed = helpCanBeFormed(y, x, word);
+               //board[y][x]->visited = true;
+               Grid<Cube> localBoard;
+                   localBoard.resize(board.nRows, board.nCols);
+                   for (int y=0; y<board.nRows; y++) {
+                       for (int x=0; x<board.nCols; x++) {
+                           localBoard[y][x] = *board.get(y,x);
+                       }
+                   }
+               bool canBeFormed = helpCanBeFormed(y, x, word.substr(1), localBoard);
                resetVisited();
                if (canBeFormed) return true;
            }
@@ -103,19 +121,19 @@ bool Boggle::wordCanBeFormed(string word) {
     return false;
 }
 
-bool Boggle::helpCanBeFormed(int yCenter, int xCenter, string word) {
+bool Boggle::helpCanBeFormed(int yCenter, int xCenter, string word, Grid<Cube> localBoard) {
     cout << word << endl;
     if (word.empty()){
         return true;
     }
+    localBoard[yCenter][xCenter].visited = true;
     for (int y=yCenter-1; y <= yCenter+1; y++) {
         for (int x=xCenter-1; x <= xCenter+1; x++) {
-            if (board.inBounds(y, x) && !board.get(y, x)->visited) {
-                cout << board.get(y, x)->letter << endl;
-                if (board.get(y, x)->letter == word[0]) {
-                    word.erase(0);
-                    board[y][x]->visited = true;
-                    if (helpCanBeFormed(y, x, word)) return true;
+            if (localBoard.inBounds(y, x) && !localBoard.get(y, x).visited) {
+                cout << localBoard.get(y, x).letter << endl;
+                if (localBoard.get(y, x).letter == word[0]) {
+
+                    if (helpCanBeFormed(y, x, word.substr(1), localBoard)) return true;
                 }
             }
         }
@@ -129,6 +147,61 @@ void Boggle::resetVisited() {
             board[y][x]->visited = false;;
         }
     }
+}
+
+void Boggle::playComputer() {
+    addWordsFromBoard();
+}
+
+void Boggle::addWordsFromBoard() {
+    for (int y=0; y<board.nRows; y++) {
+        for (int x=0; x<board.nCols; x++) {
+            //board[y][x]->visited = true;
+            string prefix = string(1, board[y][x]->letter);
+            Grid<Cube> localBoard;
+            localBoard.resize(board.nRows, board.nCols);
+            for (int y=0; y<board.nRows; y++) {
+                for (int x=0; x<board.nCols; x++) {
+                    localBoard[y][x] = *board.get(y,x);
+                }
+            }
+            wordFromCube(y, x, prefix, localBoard);
+            resetVisited();
+        }
+    }
+}
+
+
+void Boggle::wordFromCube(int yCenter, int xCenter, string prefix, Grid<Cube> localBoard) {
+    //cout << prefix << endl;
+    localBoard[yCenter][xCenter].visited = true;
+    for (int y = yCenter-1; y <= yCenter+1; y++) {
+        for (int x = xCenter-1; x <= xCenter+1; x++) {
+            if (localBoard.inBounds(y, x) && !localBoard.get(y, x).visited) {
+                string newPrefix = prefix + string(1, localBoard[y][x].letter);
+                if (english.containsPrefix(newPrefix)) {
+                    wordFromCube(y, x, newPrefix, localBoard);
+                }
+                if (!computerWords.contains(newPrefix) && english.contains(newPrefix)
+                        && newPrefix.length() >= 4 && !playerWords.contains(newPrefix)) {
+                    computerWords.add(newPrefix);
+                    addComputerScore(newPrefix.length()-3);
+                }
+
+            }
+
+        }
+    }
+}
+
+void Boggle::resetPlayer() {
+    playerScore = 0;
+    playerWords.clear();
+}
+
+void Boggle::resetComputer() {
+    computerScore = 0;
+    computerWords.clear();
 }
 
 // TODO: implement the members you declared in Boggle.h
