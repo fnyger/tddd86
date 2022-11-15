@@ -25,7 +25,6 @@ void playOneGame(Boggle& boggle) {
     } else {
         boggle.initiateBoard();
     }
-    boggle.mapGrid();
     cout << "It's your turn!" << endl;
     boggle.printBoard();
 

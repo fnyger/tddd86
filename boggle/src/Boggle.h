@@ -61,17 +61,14 @@ public:
 
     bool wordCanBeFormed(string word);
 
-    void mapGrid();
+    bool helpCanBeFormed(int yCenter, int xCenter, string word);
 
-    Map<char, int> getLettersMapped() const;
-
-    Map<char, int> mapWord(string word);
+    void resetVisited();
 
     // TODO: decide the public member functions and declare them
 
 private:
     Grid<Cube*> board;
-    Map<char, int> lettersMapped;
     int playerScore = 0;
     Set<string> playerWords;
     Lexicon english = Lexicon("EnglishWords.dat");

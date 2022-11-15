@@ -86,43 +86,49 @@ Lexicon Boggle::getLexicon() const {
     return english;
 }
 
-void Boggle::mapGrid() {
+
+
+bool Boggle::wordCanBeFormed(string word) {
     for (int y=0; y < board.nRows; y++) {
         for (int x=0; x < board.nCols; x++) {
-            if (!lettersMapped.containsKey(board.get(y,x)->letter)) {
-                lettersMapped.put(board.get(y,x)->letter, 1);
-            } else {
-                lettersMapped[board.get(y,x)->letter] = //
-                        lettersMapped.get(board.get(y,x)->letter)+1;
+           if (board.get(y, x)->letter == word[0]) {
+               word.erase(0);
+               board[y][x]->visited = true;
+               bool canBeFormed = helpCanBeFormed(y, x, word);
+               resetVisited();
+               if (canBeFormed) return true;
+           }
+        }
+    }
+    return false;
+}
+
+bool Boggle::helpCanBeFormed(int yCenter, int xCenter, string word) {
+    cout << word << endl;
+    if (word.empty()){
+        return true;
+    }
+    for (int y=yCenter-1; y <= yCenter+1; y++) {
+        for (int x=xCenter-1; x <= xCenter+1; x++) {
+            if (board.inBounds(y, x) && !board.get(y, x)->visited) {
+                cout << board.get(y, x)->letter << endl;
+                if (board.get(y, x)->letter == word[0]) {
+                    word.erase(0);
+                    board[y][x]->visited = true;
+                    if (helpCanBeFormed(y, x, word)) return true;
+                }
             }
         }
     }
+    return false;
 }
 
-Map<char, int> Boggle::mapWord(string word) {
-    Map<char, int> wordMapped;
-    for (char letter : word) {
-        if (!wordMapped.containsKey(letter)) {
-            wordMapped.put(letter, 1);
-        } else {
-            wordMapped[letter] = wordMapped.get(letter) + 1;
+void Boggle::resetVisited() {
+    for (int y=0; y<board.nRows; y++) {
+        for (int x=0; x<board.nCols; x++) {
+            board[y][x]->visited = false;;
         }
     }
-    return wordMapped;
 }
 
-bool Boggle::wordCanBeFormed(string word) {
-    cout << "test" << endl;
-    Map<char, int> wordMapped = mapWord(word);
-    for (char letter : wordMapped) {
-        if (!lettersMapped.containsKey(letter)  || lettersMapped[letter] < wordMapped[letter]) {
-            return false;
-        }
-    }
-    return true;
-}
-
-Map<char, int> Boggle::getLettersMapped() const {
-   return lettersMapped;
-}
 // TODO: implement the members you declared in Boggle.h
