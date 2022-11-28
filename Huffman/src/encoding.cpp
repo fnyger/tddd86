@@ -1,25 +1,27 @@
-// This is the CPP file you will edit and turn in.
-// Also remove these comments here and add your own, along with
-// comments on every function and on complex code sections.
-// TODO: remove this comment header
+/*
+ * This file defines the functions in encoding.h to encode files with Huffman encoding.
+ */
 
 #include "encoding.h"
 #include "bitstream.h"
 #include <queue>
+#include <string>
 using namespace std;
-// TODO: include any other headers you need
 
 map<int, int> buildFrequencyTable(istream& input) {
     map<int, int> freqTable;
-    char newChar;
+    int newChar;
     while((newChar = input.get()) != -1) {
         if (freqTable.count(newChar)) {
-            freqTable[newChar] += 1;
+            freqTable[newChar]++;
         } else {
             freqTable.emplace(newChar, 1);
         }
+
     }
     freqTable.emplace(PSEUDO_EOF, 1);
+    input.clear();
+    input.seekg(0);
     return freqTable;
 }
 
@@ -60,11 +62,10 @@ map<int, string> buildEncodingMap(HuffmanNode* encodingTree) {
 }
 
 void encodeData(istream& input, const map<int, string> &encodingMap, obitstream& output) {
-    // TODO: implement this function
     int currentByte;
 
     while((currentByte = input.get()) != -1) {
-        for(unsigned i = 0; i < encodingMap.at(currentByte).size(); ++i) {
+        for(unsigned i = 0; i < encodingMap.at(currentByte).size(); i++) {
             if (encodingMap.at(currentByte)[i] == '1') {
                 output.writeBit(1);
             } else {
@@ -73,14 +74,15 @@ void encodeData(istream& input, const map<int, string> &encodingMap, obitstream&
 
         }
     }
-    for(unsigned i = 0; i < encodingMap.at(PSEUDO_EOF).size(); ++i) {
+    for(unsigned i = 0; i < encodingMap.at(PSEUDO_EOF).size(); i++) {
         if (encodingMap.at(PSEUDO_EOF)[i] == '1') {
             output.writeBit(1);
         } else {
             output.writeBit(0);
         }
     }
-
+    input.clear();
+    input.seekg(0);
 }
 
 void decodeData(ibitstream& input, HuffmanNode* encodingTree, ostream& output) {
@@ -99,11 +101,12 @@ void decodeData(ibitstream& input, HuffmanNode* encodingTree, ostream& output) {
             currNode = encodingTree;
         }
     }
+    input.clear();
+    input.seekg(0);
 
 }
 
 void compress(istream& input, obitstream& output) {
-    // TODO: implement this function
     map<int, int> frequencyTable = buildFrequencyTable(input);
     HuffmanNode* encodingTree = buildEncodingTree(frequencyTable);
     map<int, string> encodingMap = buildEncodingMap(encodingTree);
@@ -126,19 +129,39 @@ void compress(istream& input, obitstream& output) {
     }
     output.put('}');
     input.clear();
-    input.seekg(0, ios::beg);
+    input.seekg(0);
     encodeData(input, encodingMap, output);
     freeTree(encodingTree);
 
 }
 
 void decompress(ibitstream& input, ostream& output) {
-    // TODO: implement this function
+    map<int, int> frequencyTable;
+    input.get();
+    char currentByte;
+    while((currentByte = input.get()) != '}') {
+        string currentCharacter;
+        while(currentByte != ':') {
+            currentCharacter += (string(1, currentByte));
+            currentByte = input.get();
+        }
+        string numberOfCharacter;
+        while((currentByte = input.get()) != ',' && currentByte != '}') {
+            numberOfCharacter += (string(1, currentByte));
+        }
+        frequencyTable.emplace(atoi(currentCharacter.c_str()), atoi(numberOfCharacter.c_str()));
+        if(currentByte == '}') break;
+        input.get();
+    }
+    HuffmanNode* encodingTree = buildEncodingTree(frequencyTable);
+    decodeData(input, encodingTree, output);
+    input.clear();
+    input.seekg(0);
+    freeTree(encodingTree);
 }
 
 void freeTree(HuffmanNode* node) {
-    // TODO: implement this function
-    if (node != nullptr) return;
+    if (node == nullptr) return;
     freeTree(node->zero);
     freeTree(node->one);
     delete node;
