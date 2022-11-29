@@ -1,5 +1,9 @@
 /*
  * This file defines the functions in encoding.h to encode files with Huffman encoding.
+ * Felix Ramnelöv
+ * felra653
+ * Filip Nygren
+ * filny841
  */
 
 #include "encoding.h"
@@ -57,6 +61,7 @@ void traverse(HuffmanNode* encodingTree, string code, map<int, string>& encoding
 
 map<int, string> buildEncodingMap(HuffmanNode* encodingTree) {
     map<int, string> encodingMap;
+    f
     traverse(encodingTree, "", encodingMap);
     return encodingMap;
 }
@@ -99,6 +104,7 @@ void decodeData(ibitstream& input, HuffmanNode* encodingTree, ostream& output) {
             if (currNode->character == PSEUDO_EOF) break;
             output.put(currNode->character);
             currNode = encodingTree;
+            f
         }
     }
     input.clear();
