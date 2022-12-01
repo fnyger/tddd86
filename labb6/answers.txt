@@ -1,0 +1,10 @@
+A) allTheFish används i destructorn till simulation, i harvestTonnageNow och addFish och representerar alla fiskar som lever (även fångade). eventQueue töms också i destructorn och behandlas i run och i scheduleEvent. Den är en prioritetskö för kommande evnet.
+
+B) Par där fiskbestånder inte kollapsar: (LANDING, MIN_CATCHABLE_AGE):
+	(70 000, 550), 
+	(80 000, 550),
+	(70 000, 250)
+
+C) Event lägger till nya events till prioritetskön och hatchEvent::processEvent skapar nya fiskar. Fiskar tas bort i de olika eventens processEvent om fisken blivit fångad samt i harvest om de är döda och i destructorn för simulatorn. Event tas bort när de behandlas i main run.
+
+Då landing, starve threshold och simulation horizon ändrades fanns inga minnesläckor.
