@@ -43,86 +43,126 @@ public:
 
 private:
 
-    // private members?
+    unsigned numberOfElements;
+    unsigned capacity;
 
+    T *storage;
 };
+
 
 template<typename T>
 MyVector<T>::MyVector(){
-    // TODO: replace the code below with your code for this member
-    MYEXCEPTION("unimplemented method");
+    numberOfElements = 0;
+    capacity = 1;
+    storage = new T[capacity];
 }
 
 template<typename T>
 MyVector<T>::~MyVector(){
-    // TODO: replace the code below with your code for this member
-    MYEXCEPTION("unimplemented method");
+    delete[] storage;
 }
 
 template<typename T>
 MyVector<T>::MyVector(const MyVector& other){
-    // TODO: replace the code below with your code for this member
-    MYEXCEPTION("unimplemented method");
+    if (&other != this) {
+        numberOfElements = other.numberOfElements;
+        capacity = other.capacity;
+        storage = new T[capacity];
+        for(unsigned i = 0; i < other.size(); i++) {
+            storage[i] = other.storage[i];
+        }
+    }
 }
 
 template<typename T>
 MyVector<T>& MyVector<T>::operator =(const MyVector& other){
-    // TODO: replace the code below with your code for this member
-    MYEXCEPTION("unimplemented method");
+    if (&other != this) {
+
+        numberOfElements = other.numberOfElements;
+        capacity = other.capacity;
+        delete[] storage;
+        storage = new T[capacity];
+        for(unsigned i = 0; i < other.size(); i++) {
+            storage[i] = other.storage[i];
+        }
+    }
+    return *this;
+
 }
+
 
 template<typename T>
 void MyVector<T>::push_back(const T& e){
-    // TODO: replace the code below with your code for this member
-    MYEXCEPTION("unimplemented method");
+    if(numberOfElements == capacity) {
+
+        T* newStorage = new T[capacity*2];
+        for(unsigned i = 0; i < numberOfElements; i++) {
+            newStorage[i] = storage[i];
+        }
+        delete [] storage;
+        storage = newStorage;
+        capacity *= 2;
+    }
+
+    storage[numberOfElements] = e;
+    numberOfElements++;
 }
 
 template<typename T>
 void MyVector<T>::pop_back(){
-    // TODO: replace the code below with your code for this member
-    MYEXCEPTION("unimplemented method");
+    if(!empty()) {
+        numberOfElements--;
+        if(numberOfElements == capacity/2) {
+
+            T* newStorage = new T[capacity/2];
+            for(unsigned i = 0; i<numberOfElements; i++) {
+                newStorage[i] = storage[i];
+            }
+           delete[] storage;
+            storage = newStorage;
+            capacity /= 2;
+        }
+    }
 }
 
 template<typename T>
 T& MyVector<T>::operator[](unsigned i){
-    // TODO: replace the code below with your code for this member
-    MYEXCEPTION("unimplemented method");
+    return storage[i];
 }
 
 template<typename T>
 const T& MyVector<T>::operator[](unsigned i)const{
-    // TODO: replace the code below with your code for this member
-    MYEXCEPTION("unimplemented method");
+    return storage[i];
 }
 
 template<typename T>
 bool MyVector<T>::empty()const{
-    // TODO: replace the code below with your code for this member
-    MYEXCEPTION("unimplemented method");
+    return numberOfElements == 0;
 }
 
 template<typename T>
 void MyVector<T>::clear(){
-    // TODO: replace the code below with your code for this member
-    MYEXCEPTION("unimplemented method");
+    delete[] storage;
+    capacity = 1;
+    numberOfElements = 0;
+    storage = new T[capacity];
 }
 
 template<typename T>
 unsigned MyVector<T>::size()const{
-    // TODO: replace the code below with your code for this member
-    MYEXCEPTION("unimplemented method");
+    return numberOfElements;
 }
 
 template<typename T>
 T* MyVector<T>::begin(){
-    // TODO: replace the code below with your code for this member
-    MYEXCEPTION("unimplemented method");
+
+    return &storage[0];
+
 }
 
 template<typename T>
 T* MyVector<T>::end(){
-    // TODO: replace the code below with your code for this member
-    MYEXCEPTION("unimplemented method");
+    return &storage[numberOfElements];
 }
 
 #endif // MY_VECTOR_H
