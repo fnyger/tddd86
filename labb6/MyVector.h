@@ -6,6 +6,7 @@
 #define MY_VECTOR_H
 
 #include "MyException.h"
+#include <iostream>
 
 template <typename T>
 class MyVector
@@ -18,7 +19,7 @@ public:
     MyVector();
 
     /*
-     * THis destructor frees the memory that was allocated internally by the list.
+     * This destructor frees the memory that was allocated internally by the list.
      */
     ~MyVector();
 
@@ -90,9 +91,16 @@ private:
     void copyOther(const MyVector& other);
 
     /*
-     * This helper resizes the vector's internal array buffer if necessary.
+     * This helper resizes the vector's internal array buffer if necessary
+     * when popping element.
      */
-    void checkResize();
+    void checkResizePush();
+
+    /*
+     * This helper resizes the vector's internal array buffer if necessary
+     * when pushing element.
+     */
+    void checkResizePop();
 
     /*
      * This helper throws an out_of_range exception if the given index is not between
@@ -100,7 +108,6 @@ private:
      */
     void checkIndex(unsigned i, unsigned min, unsigned max) const;
 };
-
 
 template<typename T>
 MyVector<T>::MyVector(){
@@ -128,7 +135,6 @@ MyVector<T>& MyVector<T>::operator =(const MyVector& other){
         copyOther(other);
     }
     return *this;
-
 }
 
 template<typename T>
@@ -141,20 +147,9 @@ void MyVector<T>::copyOther(const MyVector& other) {
     }
 }
 
-
 template<typename T>
 void MyVector<T>::push_back(const T& e){
-    if(numberOfElements == capacity) {
-
-        T* newStorage = new T[capacity*2];
-        for(unsigned i = 0; i < numberOfElements; i++) {
-            newStorage[i] = storage[i];
-        }
-        delete [] storage;
-        storage = newStorage;
-        capacity *= 2;
-    }
-
+    checkResizePush();
     storage[numberOfElements] = e;
     numberOfElements++;
 }
@@ -163,47 +158,40 @@ template<typename T>
 void MyVector<T>::pop_back(){
     if(!empty()) {
         numberOfElements--;
-        if(numberOfElements == capacity/2) {
-
-            T* newStorage = new T[capacity/2];
-            for(unsigned i = 0; i<numberOfElements; i++) {
-                newStorage[i] = storage[i];
-            }
-           delete[] storage;
-            storage = newStorage;
-            capacity /= 2;
-        }
+        checkResizePop();
     }
 }
 
 template<typename T>
-void MyVector<T>::checkResize() {
-    bool resizeNecessary = false;
-    T* newStorage;
+void MyVector<T>::checkResizePush() {
     if(numberOfElements == capacity) {
-        resizeNecessary = true;
+        T* newStorage = new T[capacity*2];
+        for(unsigned i = 0; i < numberOfElements; i++) {
+            newStorage[i] = storage[i];
+        }
+        delete [] storage;
+        storage = newStorage;
         capacity *= 2;
-    } else if(numberOfElements == capacity/2) {
-        resizeNecessary = true;
-        capacity /= 2;
     }
-    if (resizeNecessary) {
-        newStorage = new T[capacity];
+}
+
+template<typename T>
+void MyVector<T>::checkResizePop() {
+    if(numberOfElements == capacity/2) {
+        T* newStorage = new T[capacity/2];
         for(unsigned i = 0; i<numberOfElements; i++) {
             newStorage[i] = storage[i];
         }
        delete[] storage;
-       storage = newStorage;
+        storage = newStorage;
+        capacity /= 2;
     }
 }
-
-
 
 template<typename T>
 T& MyVector<T>::operator[](unsigned i){
     checkIndex(i, 0, numberOfElements-1);
     return storage[i];
-
 }
 
 template<typename T>
@@ -232,7 +220,6 @@ unsigned MyVector<T>::size()const{
 
 template<typename T>
 T* MyVector<T>::begin(){
-
     return &storage[0];
 
 }
