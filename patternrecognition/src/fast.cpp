@@ -30,11 +30,6 @@ void render_line(QGraphicsScene* scene, const Point& p1, const Point& p2) {
     p1.lineTo(scene, p2);
 }
 
-bool sjuukt(pair<double, set<Point>>& a,
-         pair<double, set<Point>>& b)
-{
-    return a.second.size() > b.second.size();
-}
 
 class comparator {
 public:
@@ -48,18 +43,13 @@ private:
     Point p;
 };
 
-struct comp {
-    bool operator()(const std::pair<const double, std::set<Point>> &x, const std::pair<const double, std::set<Point>> &y) const {
-        return x.second.size() < y.second.size();
-    }
-};
 
 
 int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
 
     // open file
-    string filename = "mystery10089.txt";
+    string filename = "input20.txt";
     ifstream input;
     input.open(filename);
 
@@ -106,19 +96,17 @@ int main(int argc, char *argv[]) {
         }
         sort(pVec.begin(), pVec.end(), comparator(points.at(i)));
 
+        for(unsigned j=0; j<pVec.size()-3; j++) {
 
 
-        for(int j=0; j<pVec.size()-3; j++) {
-
-
-            if(pVec[j].slopeTo(points.at(i)) == pVec[j+2].slopeTo(points.at(i)) && i != j) {
+            if(pVec[j].slopeTo(points.at(i)) == pVec[j+2].slopeTo(points.at(i)) && i != (int)j) {
                 double slope = pVec[j].slopeTo(points.at(i));
-
                 while (pVec[j].slopeTo(points.at(i)) == slope) {
                     render_line(scene, points.at(i), pVec[j]);
                     a.processEvents(); // show rendered line
                     j++;
                 }
+
 
             }
         }
