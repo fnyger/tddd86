@@ -30,17 +30,17 @@ public:
 
     bool empty()const;
 
-  unsigned size() const;
+    unsigned size() const;
 
 private:
 
-  unsigned parentIndex(unsigned index);
+    unsigned getParentIndex(unsigned index);
 
-  int leftChildIndex(unsigned index);
+    int getLeftChildIndex(unsigned index);
 
-  int rightChildIndex(unsigned index);
+    int getRightChildIndex(unsigned index);
 
-  void swap(unsigned index1, unsigned index2);
+    void swap(unsigned index1, unsigned index2);
 
 };
 
@@ -60,12 +60,12 @@ void MyPriorityQueue<T,C>::push(const T& t){
     vector_array.push_back(t);
 
     unsigned index = vector_array.size() - 1;
-    unsigned parent_index = parentIndex(index);
+    unsigned parentIndex = getParentIndex(index);
 
-    while(index > 0 && strictly_larger_operator(vector_array[parent_index], vector_array[index])) {
-        swap(index, parent_index);
-        index = parent_index;
-        parent_index = parentIndex(index);
+    while(index > 0 && strictly_larger_operator(vector_array[parentIndex], vector_array[index])) {
+        swap(index, parentIndex);
+        index = parentIndex;
+        parentIndex = getParentIndex(index);
     }
 }
 
@@ -81,33 +81,41 @@ void MyPriorityQueue<T,C>::pop(){
     vector_array.pop_back();
     int index = 0;
     while(index != -1) {
-        int leftChild = leftChildIndex(index);
-        int rightChild = rightChildIndex(index);
+        int leftChildIndex = getLeftChildIndex(index);
+        int rightChildIndex = getRightChildIndex(index);
+        T currentNode = vector_array[index];
 
         //No children
-        if(leftChild == -1) {
-            index = leftChild;
-        } else if(rightChild == -1) { //only left children
+        if(leftChildIndex == -1) {
+            return;
+        }
 
-            if(strictly_larger_operator(vector_array[index], vector_array[leftChild])) {
-                swap(leftChild, index);
-                index = leftChild;
+
+        T leftChild = vector_array[leftChildIndex];
+        if(rightChildIndex == -1) { //only left children
+
+            if(strictly_larger_operator(currentNode, leftChild)) {
+                swap(leftChildIndex, index);
+                index = leftChildIndex;
             }
-            index = -1;
+            return;
 
         } else { //Two children
             int largestChildIndex;
-            if(strictly_larger_operator(vector_array[rightChild], vector_array[leftChild])) {
-                largestChildIndex = leftChild;
-            } else {
-                largestChildIndex = rightChild;
-            }
+            T rightChild = vector_array[rightChildIndex];
 
-            if(strictly_larger_operator(vector_array[index], vector_array[largestChildIndex])) {
+            if(strictly_larger_operator(rightChild, leftChild)) {
+                largestChildIndex = leftChildIndex;
+            } else {
+                largestChildIndex = rightChildIndex;
+            }
+            T largestChild = vector_array[largestChildIndex];
+
+            if(strictly_larger_operator(currentNode, largestChild)) {
                 swap(largestChildIndex, index);
                 index = largestChildIndex;
             } else {
-                index = -1;
+                return;
             }
 
         }
@@ -127,13 +135,13 @@ unsigned MyPriorityQueue<T,C>::size()const{
 }
 
 template <typename T, typename C>
-unsigned MyPriorityQueue<T,C>::parentIndex(unsigned index){
+unsigned MyPriorityQueue<T,C>::getParentIndex(unsigned index){
 
     return index ? (int)((index - 1) / 2) : 0;
 }
 
 template <typename T, typename C>
-int MyPriorityQueue<T,C>::leftChildIndex(unsigned index){
+int MyPriorityQueue<T,C>::getLeftChildIndex(unsigned index){
     unsigned newIndex = 2*index+1;
     if(newIndex < size()) {
         return newIndex;
@@ -142,7 +150,7 @@ int MyPriorityQueue<T,C>::leftChildIndex(unsigned index){
 }
 
 template <typename T, typename C>
-int MyPriorityQueue<T,C>::rightChildIndex(unsigned index){
+int MyPriorityQueue<T,C>::getRightChildIndex(unsigned index){
     unsigned newIndex = 2*index+2;
     if(newIndex < size()) {
         return newIndex;
