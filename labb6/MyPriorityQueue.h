@@ -1,8 +1,8 @@
-// This is the second .h file you will edit
-// We have provided a skeleton for you,
-// but you must finish it as described in the spec.
-// Also remove these comments here and add your own, as well as on the members.
-// TODO: remove this comment header
+/*
+ * MyPriorityQueue.h declares and implements the
+ * MyPriorityQueue template class.
+ *
+ */
 
 #ifndef MY_PRIORITY_QUEUE_H
 #define MY_PRIORITY_QUEUE_H
@@ -18,18 +18,40 @@ class MyPriorityQueue
     C strictly_larger_operator;
 
 public:
+
+    /*
+     * Constructs the priority queue
+     */
     MyPriorityQueue();
 
+    /*
+     * Destructor for priority queue
+     */
     ~MyPriorityQueue();
 
+    /*
+     * Push element to priority queue
+     */
     void push(const T& t);
 
+    /*
+     * Return the top element of priority queue
+     */
     T top()const;
 
+    /*
+     * Pop the top element of priority queue
+     */
     void pop();
 
+    /*
+     * Returns true if priority queue is empty, otherwise false.
+     */
     bool empty()const;
 
+    /*
+     * Returns size of priority queue
+     */
     unsigned size() const;
 
 private:
