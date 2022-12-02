@@ -1,44 +1,81 @@
-// This is the first .h file you will edit
-// We have provided a skeleton for you,
-// but you must finish it as described in the spec.
-// Also remove these comments here and add your own, as well as on the members.
-// TODO: remove this comment header
+/*
+ * MyVector.h declares and implements the MyVector class behaviour.
+ */
 
 #ifndef MY_VECTOR_H
 #define MY_VECTOR_H
 
 #include "MyException.h"
+#include <iostream>
 
 template <typename T>
 class MyVector
 {
 
 public:
+    /*
+     * Constructs a new empty vector.
+     */
     MyVector();
 
+    /*
+     * This destructor frees the memory that was allocated internally by the list.
+     */
     ~MyVector();
 
+    /*
+     * Copy constructor
+     */
     MyVector(const MyVector& other);
 
+    /*
+     * Copy assignment
+     */
     MyVector& operator =(const MyVector& other);
 
-
+    /*
+     * Pushes a given element to the end of the vector.
+     */
     void push_back(const T&);
 
+    /*
+     * Removes the last element of the vector.
+     */
     void pop_back();
 
+    /*
+     * Returns the element at the given 0-based index of the vector.
+     */
     T& operator[](unsigned i);
 
+    /*
+     * Returns the element at the given 0-based index of the vector.
+     */
     const T& operator[](unsigned i)const;
 
+    /*
+     * Returns true if the are no elements in the vecotr.
+     */
     bool empty()const;
 
+    /*
+     * Returns a pointer to the beginning of the vector.
+     */
     T* begin();
 
+    /*
+     * Returns a pointer to the end of the vector.
+     */
     T* end();
 
+    /*
+     * Removes all elements from the vector.
+     */
     void clear();
 
+    /*
+     * Returns the number of elements in the vector.
+     */
     unsigned size()const;
 
 private:
@@ -47,8 +84,30 @@ private:
     unsigned capacity;
 
     T *storage;
-};
 
+    /*
+     * This helper copies the elements of other into this vector.
+     */
+    void copyOther(const MyVector& other);
+
+    /*
+     * This helper resizes the vector's internal array buffer if necessary
+     * when popping element.
+     */
+    void checkResizePush();
+
+    /*
+     * This helper resizes the vector's internal array buffer if necessary
+     * when pushing element.
+     */
+    void checkResizePop();
+
+    /*
+     * This helper throws an out_of_range exception if the given index is not between
+     * the given min/max indexes, inclusive.
+     */
+    void checkIndex(unsigned i, unsigned min, unsigned max) const;
+};
 
 template<typename T>
 MyVector<T>::MyVector(){
@@ -65,45 +124,32 @@ MyVector<T>::~MyVector(){
 template<typename T>
 MyVector<T>::MyVector(const MyVector& other){
     if (&other != this) {
-        numberOfElements = other.numberOfElements;
-        capacity = other.capacity;
-        storage = new T[capacity];
-        for(unsigned i = 0; i < other.size(); i++) {
-            storage[i] = other.storage[i];
-        }
+        copyOther(other);
     }
 }
 
 template<typename T>
 MyVector<T>& MyVector<T>::operator =(const MyVector& other){
     if (&other != this) {
-
-        numberOfElements = other.numberOfElements;
-        capacity = other.capacity;
         delete[] storage;
-        storage = new T[capacity];
-        for(unsigned i = 0; i < other.size(); i++) {
-            storage[i] = other.storage[i];
-        }
+        copyOther(other);
     }
     return *this;
-
 }
 
+template<typename T>
+void MyVector<T>::copyOther(const MyVector& other) {
+    numberOfElements = other.numberOfElements;
+    capacity = other.capacity;
+    storage = new T[capacity];
+    for(unsigned i = 0; i < other.size(); i++) {
+        storage[i] = other.storage[i];
+    }
+}
 
 template<typename T>
 void MyVector<T>::push_back(const T& e){
-    if(numberOfElements == capacity) {
-
-        T* newStorage = new T[capacity*2];
-        for(unsigned i = 0; i < numberOfElements; i++) {
-            newStorage[i] = storage[i];
-        }
-        delete [] storage;
-        storage = newStorage;
-        capacity *= 2;
-    }
-
+    checkResizePush();
     storage[numberOfElements] = e;
     numberOfElements++;
 }
@@ -112,26 +158,45 @@ template<typename T>
 void MyVector<T>::pop_back(){
     if(!empty()) {
         numberOfElements--;
-        if(numberOfElements == capacity/2) {
+        checkResizePop();
+    }
+}
 
-            T* newStorage = new T[capacity/2];
-            for(unsigned i = 0; i<numberOfElements; i++) {
-                newStorage[i] = storage[i];
-            }
-           delete[] storage;
-            storage = newStorage;
-            capacity /= 2;
+template<typename T>
+void MyVector<T>::checkResizePush() {
+    if(numberOfElements == capacity) {
+        T* newStorage = new T[capacity*2];
+        for(unsigned i = 0; i < numberOfElements; i++) {
+            newStorage[i] = storage[i];
         }
+        delete [] storage;
+        storage = newStorage;
+        capacity *= 2;
+    }
+}
+
+template<typename T>
+void MyVector<T>::checkResizePop() {
+    if(numberOfElements == capacity/2) {
+        T* newStorage = new T[capacity/2];
+        for(unsigned i = 0; i<numberOfElements; i++) {
+            newStorage[i] = storage[i];
+        }
+       delete[] storage;
+        storage = newStorage;
+        capacity /= 2;
     }
 }
 
 template<typename T>
 T& MyVector<T>::operator[](unsigned i){
+    checkIndex(i, 0, numberOfElements-1);
     return storage[i];
 }
 
 template<typename T>
 const T& MyVector<T>::operator[](unsigned i)const{
+    checkIndex(i, 0, numberOfElements-1);
     return storage[i];
 }
 
@@ -155,7 +220,6 @@ unsigned MyVector<T>::size()const{
 
 template<typename T>
 T* MyVector<T>::begin(){
-
     return &storage[0];
 
 }
@@ -163,6 +227,16 @@ T* MyVector<T>::begin(){
 template<typename T>
 T* MyVector<T>::end(){
     return &storage[numberOfElements];
+}
+
+template<typename T>
+void MyVector<T>::checkIndex(unsigned i, unsigned min, unsigned max)const {
+    if (i < min || i > max) {
+        throw std::out_of_range("Index " + std::to_string(i)
+                                      + " out of range; (must be between "
+                                      + std::to_string(min) + " and "
+                                      + std::to_string(max) + ")");
+    }
 }
 
 #endif // MY_VECTOR_H
