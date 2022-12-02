@@ -56,12 +56,27 @@ public:
 
 private:
 
+    /*
+     * This helper returns the index of the parent to the node with the given index.
+     * Returns 0 if the node is the root of the tree.
+     */
     unsigned getParentIndex(unsigned index);
 
+    /*
+     * This helper returns the index of the left child to the node with the given index.
+     * Returns -1 if the is no left child.
+     */
     int getLeftChildIndex(unsigned index);
 
+    /*
+     * This helper returns the index of the right child to the node with the given index.
+     * Returns -1 if the is no right child.
+     */
     int getRightChildIndex(unsigned index);
 
+    /*
+     * This helper swaps two elements in the priority queue.
+     */
     void swap(unsigned index1, unsigned index2);
 
 };
