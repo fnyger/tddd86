@@ -49,7 +49,7 @@ int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
 
     // open file
-    string filename = "input20.txt";
+    string filename = "input12800.txt";
     ifstream input;
     input.open(filename);
 
@@ -85,27 +85,33 @@ int main(int argc, char *argv[]) {
     sort(points.begin(), points.end());
     auto begin = chrono::high_resolution_clock::now();
 
-    // iterate through all combinations of 4 points
+    // iterates through all points
     for (int i = 0 ; i < N; ++i) {
-        std::map<double, set<Point>> pMap;
-        vector<Point> pVec;
+        vector<Point> slopeVector;
+        // adds all points other than i to a vector and sorts by slope
         for (int j = 0; j < N; j++) {
             if (j != i) {
-                pVec.push_back(points.at(j));
+                slopeVector.push_back(points.at(j));
             }
         }
-        sort(pVec.begin(), pVec.end(), comparator(points.at(i)));
+        sort(slopeVector.begin(), slopeVector.end(), comparator(points.at(i)));
 
-        for(unsigned j=0; j<pVec.size()-3; j++) {
-
-
-            if(pVec[j].slopeTo(points.at(i)) == pVec[j+2].slopeTo(points.at(i)) && i != (int)j) {
-                double slope = pVec[j].slopeTo(points.at(i));
-                while (pVec[j].slopeTo(points.at(i)) == slope) {
-                    render_line(scene, points.at(i), pVec[j]);
-                    a.processEvents(); // show rendered line
+        // iterates through the sorted vector and renders
+        //the lines with min 4 points including point i
+        for(unsigned j=0; j<slopeVector.size()-3; j++) {
+            if(slopeVector[j].slopeTo(points.at(i)) == slopeVector[j+2].slopeTo(points.at(i)) && i != (int)j) {
+                double slope = slopeVector[j].slopeTo(points.at(i));
+                Point largestPoint = slopeVector[j];
+                Point smallestPoint = slopeVector[j];
+                while (slopeVector[j+1].slopeTo(points.at(i)) == slope) {
+                    if (slopeVector[j+1] > largestPoint) largestPoint = slopeVector[j+1];
+                    else if (slopeVector[j+1] < smallestPoint) smallestPoint = slopeVector[j+1];
                     j++;
                 }
+                render_line(scene, smallestPoint, largestPoint);
+                a.processEvents(); // show rendered line
+
+
 
 
             }
