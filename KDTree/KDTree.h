@@ -15,6 +15,21 @@
 #include <stdexcept>
 #include <cmath>
 
+template <size_t N, typename ElemType>
+struct Node {
+    Node(Point<N> point, ElemType data, int level) {
+        this->point = point;
+        this->data = data;
+        this->level = level;
+    }
+
+    Point<N> point;
+    ElemType data;
+    int level = 0;
+    Node* left = nullptr;
+    Node* right = nullptr;
+};
+
 // "using namespace" in a header file is conventionally frowned upon, but I'm
 // including it here so that you may use things like size_t without having to
 // type std::size_t every time.
@@ -101,24 +116,45 @@ public:
 
 private:
     // TODO: Add implementation details here.
+    Node<N, ElemType>* root;
+    void deleteTree(Node<N, ElemType>* node);
+    size_t sizeT = 0;
 };
 
 /** KDTree class implementation details */
 
 template <size_t N, typename ElemType>
 KDTree<N, ElemType>::KDTree() {
-    // TODO: Fill this in.
+    root = nullptr;
 }
 
 template <size_t N, typename ElemType>
 KDTree<N, ElemType>::~KDTree() {
-    // TODO: Fill this in.
+    deleteTree(root);
+
 }
 
 template <size_t N, typename ElemType>
 size_t KDTree<N, ElemType>::dimension() const {
-    // TODO: Fill this in.
-    return 0;
+    return N;
+}
+
+template <size_t N, typename ElemType>
+size_t KDTree<N, ElemType>::size() const {
+    return sizeT;
+}
+
+template <size_t N, typename ElemType>
+bool KDTree<N, ElemType>::empty() const {
+    return sizeT == 0;
+}
+
+template <size_t N, typename ElemType>
+void KDTree<N, ElemType>::deleteTree(Node<N, ElemType>* node) {
+    if (node == nullptr) return;
+    deleteTree(node->left);
+    deleteTree(node->right);
+    delete node;
 }
 
 // TODO: finish the implementation of the rest of the KDTree class
