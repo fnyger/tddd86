@@ -28,6 +28,10 @@ struct Node {
     int level = 0;
     Node* left = nullptr;
     Node* right = nullptr;
+
+    double levelCoord(){
+            return point[level%N];
+        }
 };
 
 // "using namespace" in a header file is conventionally frowned upon, but I'm
@@ -118,6 +122,8 @@ private:
     // TODO: Add implementation details here.
     Node<N, ElemType>* root;
     void deleteTree(Node<N, ElemType>* node);
+    Node<N, ElemType>* findNode(Point<N>) const;
+    Node<N, ElemType>* insertNode(const Point<N>& p, const ElemType& data);
     size_t sizeT = 0;
 };
 
@@ -150,11 +156,100 @@ bool KDTree<N, ElemType>::empty() const {
 }
 
 template <size_t N, typename ElemType>
+bool KDTree<N, ElemType>::contains(const Point<N>& pt) const {
+    return findNode(pt) != nullptr;
+}
+
+template <size_t N, typename ElemType>
+void KDTree<N, ElemType>::insert(const Point<N>& pt, const ElemType& value) {
+    insertNode(pt, value);
+}
+
+template <size_t N, typename ElemType>
+ElemType& KDTree<N, ElemType>::at(const Point<N>& pt) {
+    Node<N, ElemType>* node = findNode(pt);
+    if (node == nullptr) {
+        throw out_of_range("Point not in tree");
+    } else {
+        return node->data;
+    }
+}
+
+template <size_t N, typename ElemType>
+const ElemType& KDTree<N, ElemType>::at(const Point<N>& pt) const {
+    Node<N, ElemType>* node = findNode(pt);
+    if (node == nullptr) {
+        throw out_of_range("Point not in tree");
+    } else {
+        return node->data;
+    }
+}
+
+template <size_t N, typename ElemType>
 void KDTree<N, ElemType>::deleteTree(Node<N, ElemType>* node) {
     if (node == nullptr) return;
     deleteTree(node->left);
     deleteTree(node->right);
     delete node;
+}
+
+template <size_t N, typename ElemType>
+Node<N, ElemType>* KDTree<N, ElemType>::findNode(Point<N> pt) const {
+    if(root == nullptr) return root;
+    Node<N, ElemType>* current = root;
+    int level = 0;
+    while(true) {
+        if(current->point == pt) return current;
+        if(pt[level%N] < current->levelCoord()) {
+            if (current->left == nullptr) {
+                return current->left;
+            } else {
+                current = current->left;
+            }
+        } else {
+            if (current->right == nullptr) {
+                return current->right;
+            } else {
+                current = current->right;
+            }
+        }
+        level++;
+    }
+}
+
+template <size_t N, typename ElemType>
+Node<N, ElemType>* KDTree<N, ElemType>::insertNode(const Point<N>& p, const ElemType& data) {
+    if(root == nullptr) {
+        root = new Node<N, ElemType>(p, data,0);
+        sizeT++;
+        return root;
+    }
+    Node<N, ElemType>* current = root;
+    int level = 0;
+    while(true) {
+        if(current->point == p) {
+            current->data = data;
+            return current;
+        }
+        if(p[level%N] < current->levelCoord()) {
+            if (current->left == nullptr) {
+                current->left = new Node<N, ElemType>(p, data,0);
+                sizeT++;
+                return current->left;
+            } else {
+                current = current->left;
+            }
+        } else {
+            if (current->right == nullptr) {
+                current->right = new Node<N, ElemType>(p, data,0);
+                sizeT++;
+                return current->right;
+            } else {
+                current = current->right;
+            }
+        }
+        level++;
+    }
 }
 
 // TODO: finish the implementation of the rest of the KDTree class
