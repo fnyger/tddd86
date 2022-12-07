@@ -27,8 +27,8 @@ using namespace std;
 #define HarderKDTreeTestEnabled         1
 #define EdgeCaseKDTreeTestEnabled       1
 #define MutatingKDTreeTestEnabled       1
-#define ThrowingKDTreeTestEnabled       0
-#define ConstKDTreeTestEnabled          0
+#define ThrowingKDTreeTestEnabled       1
+#define ConstKDTreeTestEnabled          1
 
 #define NearestNeighborTestEnabled      0 // Step two checks
 #define MoreNearestNeighborTestEnabled  0

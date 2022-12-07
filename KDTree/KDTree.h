@@ -166,6 +166,18 @@ void KDTree<N, ElemType>::insert(const Point<N>& pt, const ElemType& value) {
 }
 
 template <size_t N, typename ElemType>
+ElemType& KDTree<N, ElemType>::operator[](const Point<N>& pt) {
+    Node<N, ElemType>* node = findNode(pt);
+    if (node == nullptr) {
+        ElemType data;
+        Node<N, ElemType>* newNode = insertNode(pt, data);
+        return newNode->data;
+    } else {
+        return node->data;
+    }
+}
+
+template <size_t N, typename ElemType>
 ElemType& KDTree<N, ElemType>::at(const Point<N>& pt) {
     Node<N, ElemType>* node = findNode(pt);
     if (node == nullptr) {
