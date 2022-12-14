@@ -13,21 +13,14 @@
 // TODO: include any other headers you need; remove this comment
 using namespace std;
 
-vector<Node *> depthFirstSearch(BasicGraph& graph, Vertex* start, Vertex* end) {
-    graph.resetData();
-    Stack<Arc*> arcStack;
-    start->visited = true;
-    for (auto arc: start->arcs) {
-        arcStack.push(arc);
-    }
-    vector<Vertex*> path = dfsRec(start, end);
-
-    return path;
-}
-
-vector<Node *> dfsRec(Vertex* current, Vertex* end) {
+/*
+ * This helper recursively finds the shortest path from
+ * the start node to the end node with depth first search.
+ */
+vector<Node *> depthFirstSearchRecursiveHelper(Vertex* current, Vertex* end) {
     vector<Vertex*> path;
     path.push_back(current);
+
     current->visited = true;
     current->setColor(GREEN);
 
@@ -38,27 +31,37 @@ vector<Node *> dfsRec(Vertex* current, Vertex* end) {
     for(auto arc: current->arcs) {
         if(!arc->finish->visited) {
             vector<Vertex*> newPath;
-            newPath = dfsRec(arc->finish, end);
+            newPath = depthFirstSearchRecursiveHelper(arc->finish, end);
+
             if(newPath.size()) {
                 for (auto node: newPath) {
                     path.push_back(node);
                 }
+
                 return path;
             }
         }
     }
+
     current->setColor(GRAY);
     path.pop_back();
+
     return path;
 }
 
+vector<Node *> depthFirstSearch(BasicGraph& graph, Vertex* start, Vertex* end) {
+    graph.resetData();
+    vector<Vertex*> path = depthFirstSearchRecursiveHelper(start, end);
+
+    return path;
+}
 
 vector<Node *> breadthFirstSearch(BasicGraph& graph, Vertex* start, Vertex* end) {
     graph.resetData();
     Queue<Vertex*> queue;
     queue.enqueue(start);
-
     vector<Vertex*> path;
+
     while(queue.size()) {
         Vertex* current = queue.dequeue();
         if(current == end) {
@@ -67,11 +70,14 @@ vector<Node *> breadthFirstSearch(BasicGraph& graph, Vertex* start, Vertex* end)
                 path.push_back(current);
                 current = current->previous;
             } while (current != start);
+
             path.push_back(start);
             start->setColor(GREEN);
             reverse(path.begin(), path.end());
+
             return path;
         }
+
         for(auto arc: current->arcs){
             if(!arc->finish->visited) {
                 arc->finish->visited = true;
