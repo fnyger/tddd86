@@ -92,9 +92,15 @@ private:
 
     /*
      * This helper resizes the vector's internal array buffer if necessary
-     * when popping element.
+     * when popping element with O(1) time complexity.
      */
     void checkResizePush();
+
+    /*
+     * This helper resizes the vector's internal array buffer if necessary
+     * when popping element with O(N) time complexity.
+     */
+    void checkResizePushON();
 
     /*
      * This helper resizes the vector's internal array buffer if necessary
@@ -150,6 +156,7 @@ void MyVector<T>::copyOther(const MyVector& other) {
 template<typename T>
 void MyVector<T>::push_back(const T& e){
     checkResizePush();
+    //checkResizePushON();
     storage[numberOfElements] = e;
     numberOfElements++;
 }
@@ -173,6 +180,19 @@ void MyVector<T>::checkResizePush() {
         storage = newStorage;
         capacity *= 2;
     }
+}
+
+template<typename T>
+void MyVector<T>::checkResizePushON() {
+
+        T* newStorage = new T[capacity+1];
+        for(unsigned i = 0; i < numberOfElements; i++) {
+            newStorage[i] = storage[i];
+        }
+        delete [] storage;
+        storage = newStorage;
+        capacity += 1;
+
 }
 
 template<typename T>
