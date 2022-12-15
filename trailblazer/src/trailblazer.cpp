@@ -108,9 +108,10 @@ vector<Node *> dijkstrasAlgorithm(BasicGraph& graph, Vertex* start, Vertex* end)
 
     for(auto node: graph.getNodeSet()) {
         dist.insert({node, __DBL_MAX__});
+        q.enqueue(node, dist[node]);
     }
     dist[start] = 0;
-    q.enqueue(start, 0);
+    q.changePriority(start, 0);
 
     start->setColor(GREEN);
 
@@ -133,14 +134,10 @@ vector<Node *> dijkstrasAlgorithm(BasicGraph& graph, Vertex* start, Vertex* end)
         for(auto arc: current->arcs) {
 
             if(!arc->finish->visited) {
-                int distance = dist[current] + arc->cost;
+                double distance = dist[current] + arc->cost;
                 if(distance < dist[arc->finish]) {
 
-                    if(dist[arc->finish] == __DBL_MAX__) {
-                        q.enqueue(arc->finish, distance);
-                    } else {
-                        q.changePriority(arc->finish, distance);
-                    }
+                    q.changePriority(arc->finish, distance);
                     arc->finish->setColor(YELLOW);
                     arc->finish->previous = current;
                     dist[arc->finish] = distance;
@@ -159,6 +156,52 @@ vector<Node *> aStar(BasicGraph& graph, Vertex* start, Vertex* end) {
     //       (The function body code provided below is just a stub that returns
     //        an empty vector so that the overall project will compile.
     //        You should remove that code and replace it with your implementation.)
+    graph.resetData();
     vector<Vertex*> path;
+    unordered_map<Vertex*, double> gScore;
+    PriorityQueue<Vertex*> q;
+
+    for(auto node: graph.getNodeSet()) {
+        gScore.insert({node, __DBL_MAX__});
+        q.enqueue(node, __DBL_MAX__);
+    }
+    gScore[start] = 0;
+    q.changePriority(start, start->heuristic(end));
+
+    start->setColor(GREEN);
+
+    while(!q.isEmpty()) {
+
+        Vertex* current = q.dequeue();
+        current->visited = true;
+        current->setColor(GREEN);
+
+        if(current == end) {
+            do {
+                path.push_back(current);
+                current = current->previous;
+            } while (current != start);
+            path.push_back(start);
+            reverse(path.begin(), path.end());
+            return path;
+        }
+
+        for(auto arc: current->arcs) {
+
+            if(!arc->finish->visited) {
+                double distance = gScore[current] + arc->cost;
+                if(distance < gScore[arc->finish]) {
+                    gScore[arc->finish] = distance;
+
+                    q.changePriority(arc->finish, distance + arc->finish->heuristic(end));
+                    arc->finish->setColor(YELLOW);
+                    arc->finish->previous = current;
+                }
+            }
+
+        }
+    }
+
+
     return path;
 }
