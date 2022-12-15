@@ -1,19 +1,15 @@
-﻿// This is the CPP file you will edit and turn in.
-// Also remove these comments here and add your own, along with
-// comments on every function and on complex code sections.
-// TODO: write comment header for this file; remove this comment
-
+﻿/*
+ * This file implements different search algorithms used in adapter.cpp.
+ * Functions are defined in trailblazer.h
+ */
 #include "costs.h"
 #include "trailblazer.h"
-#include "set.h"
 #include "queue.h"
 #include "stack.h"
 #include <algorithm>
 #include "unordered_map"
-#include "set.h"
 #include "pqueue.h"
 
-// TODO: include any other headers you need; remove this comment
 using namespace std;
 
 /*
@@ -51,6 +47,10 @@ vector<Node *> depthFirstSearchRecursiveHelper(Vertex* current, Vertex* end) {  
     return path;
 }
 
+/*
+ * Search in graph from single source start to end using depth first search algorithm.
+ * Returns vector of path.
+ */
 vector<Node *> depthFirstSearch(BasicGraph& graph, Vertex* start, Vertex* end) {
     graph.resetData();
     vector<Vertex*> path = depthFirstSearchRecursiveHelper(start, end);
@@ -58,6 +58,10 @@ vector<Node *> depthFirstSearch(BasicGraph& graph, Vertex* start, Vertex* end) {
     return path;
 }
 
+/*
+ * Search in graph from single source start to end using breadth first search algorithm.
+ * Returns vector of path.
+ */
 vector<Node *> breadthFirstSearch(BasicGraph& graph, Vertex* start, Vertex* end) {
     graph.resetData();
     Queue<Vertex*> queue;
@@ -93,31 +97,30 @@ vector<Node *> breadthFirstSearch(BasicGraph& graph, Vertex* start, Vertex* end)
     return path;
 }
 
-struct greater_arc{
-    bool operator()(const Arc* a, const Arc* b) {
-        return a->cost < b->cost;
-    }
-};
 
+/*
+ * Search in graph from single source start to end using dijkstra's algorithm
+ * Returns vector of shortest path.
+ */
 vector<Node *> dijkstrasAlgorithm(BasicGraph& graph, Vertex* start, Vertex* end) {
 
     graph.resetData();
     vector<Vertex*> path;
     unordered_map<Vertex*, double> dist;
-    PriorityQueue<Vertex*> q;
+    PriorityQueue<Vertex*> prioQ;
 
     for(auto node: graph.getNodeSet()) {
         dist.insert({node, __DBL_MAX__});
-        q.enqueue(node, dist[node]);
+        prioQ.enqueue(node, dist[node]);
     }
     dist[start] = 0;
-    q.changePriority(start, 0);
+    prioQ.changePriority(start, 0);
 
     start->setColor(GREEN);
 
-    while(!q.isEmpty()) {
+    while(!prioQ.isEmpty()) {
 
-        Vertex* current = q.dequeue();
+        Vertex* current = prioQ.dequeue();
         current->visited = true;
         current->setColor(GREEN);
 
@@ -137,7 +140,7 @@ vector<Node *> dijkstrasAlgorithm(BasicGraph& graph, Vertex* start, Vertex* end)
                 double distance = dist[current] + arc->cost;
                 if(distance < dist[arc->finish]) {
 
-                    q.changePriority(arc->finish, distance);
+                    prioQ.changePriority(arc->finish, distance);
                     arc->finish->setColor(YELLOW);
                     arc->finish->previous = current;
                     dist[arc->finish] = distance;
@@ -151,28 +154,28 @@ vector<Node *> dijkstrasAlgorithm(BasicGraph& graph, Vertex* start, Vertex* end)
     return path;
 }
 
+/*
+ * A* search in graph from single source vertex start to end
+ * Returns vector of shortest path.
+ */
 vector<Node *> aStar(BasicGraph& graph, Vertex* start, Vertex* end) {
-    // TODO: implement this function; remove these comments
-    //       (The function body code provided below is just a stub that returns
-    //        an empty vector so that the overall project will compile.
-    //        You should remove that code and replace it with your implementation.)
     graph.resetData();
     vector<Vertex*> path;
-    unordered_map<Vertex*, double> gScore;
-    PriorityQueue<Vertex*> q;
+    unordered_map<Vertex*, double> distToStart;
+    PriorityQueue<Vertex*> prioQ;
 
     for(auto node: graph.getNodeSet()) {
-        gScore.insert({node, __DBL_MAX__});
-        q.enqueue(node, __DBL_MAX__);
+        distToStart.insert({node, __DBL_MAX__});
+        prioQ.enqueue(node, __DBL_MAX__);
     }
-    gScore[start] = 0;
-    q.changePriority(start, start->heuristic(end));
+    distToStart[start] = 0;
+    prioQ.changePriority(start, start->heuristic(end));
 
     start->setColor(GREEN);
 
-    while(!q.isEmpty()) {
+    while(!prioQ.isEmpty()) {
 
-        Vertex* current = q.dequeue();
+        Vertex* current = prioQ.dequeue();
         current->visited = true;
         current->setColor(GREEN);
 
@@ -189,16 +192,15 @@ vector<Node *> aStar(BasicGraph& graph, Vertex* start, Vertex* end) {
         for(auto arc: current->arcs) {
 
             if(!arc->finish->visited) {
-                double distance = gScore[current] + arc->cost;
-                if(distance < gScore[arc->finish]) {
-                    gScore[arc->finish] = distance;
+                double distance = distToStart[current] + arc->cost;
+                if(distance < distToStart[arc->finish]) {
+                    distToStart[arc->finish] = distance;
 
-                    q.changePriority(arc->finish, distance + arc->finish->heuristic(end));
+                    prioQ.changePriority(arc->finish, distance + arc->finish->heuristic(end));
                     arc->finish->setColor(YELLOW);
                     arc->finish->previous = current;
                 }
             }
-
         }
     }
 
