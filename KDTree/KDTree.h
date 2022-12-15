@@ -17,19 +17,17 @@
 
 template <size_t N, typename ElemType>
 struct Node {
-    Node(Point<N> point, ElemType data, int level) {
+    Node(Point<N> point, ElemType data) {
         this->point = point;
         this->data = data;
-        this->level = level;
     }
 
     Point<N> point;
     ElemType data;
-    int level = 0;
     Node* left = nullptr;
     Node* right = nullptr;
 
-    double levelCoord(){
+    double levelCoord(int level){
             return point[level%N];
         }
 };
@@ -124,6 +122,8 @@ private:
     void deleteTree(Node<N, ElemType>* node);
     Node<N, ElemType>* findNode(Point<N>) const;
     Node<N, ElemType>* insertNode(const Point<N>& p, const ElemType& data);
+    Node<N, ElemType>* kNNHelper(const Point<N>& key, size_t k, Point<N> guess, Node<N, ElemType>* current, double bestDist, int level) const;
+
     size_t sizeT = 0;
 };
 
@@ -212,7 +212,7 @@ Node<N, ElemType>* KDTree<N, ElemType>::findNode(Point<N> pt) const {
     int level = 0;
     while(true) {
         if(current->point == pt) return current;
-        if(pt[level%N] < current->levelCoord()) {
+        if(pt[level%N] < current->levelCoord(level)) {
             if (current->left == nullptr) {
                 return current->left;
             } else {
@@ -232,7 +232,7 @@ Node<N, ElemType>* KDTree<N, ElemType>::findNode(Point<N> pt) const {
 template <size_t N, typename ElemType>
 Node<N, ElemType>* KDTree<N, ElemType>::insertNode(const Point<N>& p, const ElemType& data) {
     if(root == nullptr) {
-        root = new Node<N, ElemType>(p, data,0);
+        root = new Node<N, ElemType>(p, data);
         sizeT++;
         return root;
     }
@@ -243,9 +243,9 @@ Node<N, ElemType>* KDTree<N, ElemType>::insertNode(const Point<N>& p, const Elem
             current->data = data;
             return current;
         }
-        if(p[level%N] < current->levelCoord()) {
+        if(p[level%N] < current->levelCoord(level)) {
             if (current->left == nullptr) {
-                current->left = new Node<N, ElemType>(p, data,0);
+                current->left = new Node<N, ElemType>(p, data);
                 sizeT++;
                 return current->left;
             } else {
@@ -253,7 +253,7 @@ Node<N, ElemType>* KDTree<N, ElemType>::insertNode(const Point<N>& p, const Elem
             }
         } else {
             if (current->right == nullptr) {
-                current->right = new Node<N, ElemType>(p, data,0);
+                current->right = new Node<N, ElemType>(p, data);
                 sizeT++;
                 return current->right;
             } else {
@@ -264,6 +264,72 @@ Node<N, ElemType>* KDTree<N, ElemType>::insertNode(const Point<N>& p, const Elem
     }
 }
 
+template <size_t N, typename ElemType>
+Node<N, ElemType>* KDTree<N, ElemType>::kNNHelper(const Point<N>& key, size_t k, Point<N> guess, Node<N, ElemType>* current, double bestDist, int level) const {
+
+    if(current == nullptr) {
+        return nullptr;
+    }
+
+    double dist = Distance(current->point, key);
+    if(dist < bestDist) {
+        bestDist = dist;
+        guess = current->point;
+    }
+
+    int curri = current->point[level%N];
+    int keyi = key[level%N];
+    Node<N, ElemType>* nearest;
+
+    if(keyi < curri) {
+        nearest = kNNHelper(key, k, guess, current->left, bestDist, level + 1);
+    } else {
+        nearest = kNNHelper(key, k, guess, current->right, bestDist, level + 1);
+    }
+    if(nearest == nullptr) {
+        nearest = findNode(guess);
+    }
+
+    if(abs(curri - keyi) < bestDist) {
+        Node<N, ElemType>* nearest2;
+        if(keyi < curri) {
+            nearest2 = kNNHelper(key, k, guess, current->right, bestDist, level + 1);
+        } else {
+            nearest2 = kNNHelper(key, k, guess, current->left, bestDist, level + 1);
+        }
+        if(nearest2 != nullptr && Distance(nearest2->point, key) < Distance(nearest->point, key)) {
+            nearest = nearest2;
+        }
+    }
+    if(Distance(nearest->point, key) > bestDist) {
+        nearest = findNode(guess);
+    }
+
+    return nearest;
+
+}
+
+
+template <size_t N, typename ElemType>
+ElemType KDTree<N, ElemType>::kNNValue(const Point<N>& key, size_t k) const {
+    Point<N> guess = root->point;
+    double bestDist = Distance(root->point, key);
+    Node<N, ElemType>* nearestNode = kNNHelper(key, k, guess, root, bestDist, 0);
+    return nearestNode->data;
+
+}
 // TODO: finish the implementation of the rest of the KDTree class
 
 #endif // KDTREE_INCLUDED
+
+
+
+
+
+
+
+
+
+
+
+
