@@ -70,9 +70,9 @@ vector<Node *> breadthFirstSearch(BasicGraph& graph, Vertex* start, Vertex* end)
 
     while(queue.size()) {
         Vertex* current = queue.dequeue();
+        current->setColor(GREEN);
         if(current == end) {
             do {
-                current->setColor(GREEN);
                 path.push_back(current);
                 current = current->previous;
             } while (current != start);

@@ -1,7 +1,7 @@
 A) allTheFish används i destructorn till simulation, i harvestTonnageNow och addFish och representerar alla fiskar som lever (även fångade). eventQueue töms också i destructorn och behandlas i run och i scheduleEvent. Den är en prioritetskö för kommande evnet.
 
 B) Par där fiskbestånder inte kollapsar: (LANDING, MIN_CATCHABLE_AGE):
-	(70 000, 550), 
+	(12000000, 650), 
 	(80 000, 550),
 	(70 000, 250)
 
