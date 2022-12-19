@@ -325,19 +325,19 @@ ElemType KDTree<N, ElemType>::kNNValue(const Point<N>& key, size_t k) const {
     kNNHelper(key, pqueue, root, bestDist, 0);
 
 
-    map<ElemType, int> karta;
+    map<ElemType, int> occurenceMap;
     while(!pqueue.empty()) {
         ElemType curr = pqueue.dequeueMin()->data;
 
-        if(karta.count(curr)) {
-            karta[curr]++;
+        if(occurenceMap.count(curr)) {
+            occurenceMap[curr]++;
         } else {
-            karta[curr] = 1;
+            occurenceMap[curr] = 1;
         }
     }
 
     pair<ElemType, int> biggest;
-    for(auto const& elem: karta) {
+    for(auto const& elem: occurenceMap) {
         if(elem.second > biggest.second) {
             biggest = elem;
         }
