@@ -272,13 +272,13 @@ Node<N, ElemType>* KDTree<N, ElemType>::kNNHelper(const Point<N>& key, size_t k,
     }
 
     double dist = Distance(current->point, key);
-    if(dist < bestDist) {
+    if(dist <= bestDist) {
         bestDist = dist;
         guess = current->point;
     }
 
-    int curri = current->point[level%N];
-    int keyi = key[level%N];
+    double curri = current->point[level%N];
+    double keyi = key[level%N];
     Node<N, ElemType>* nearest;
 
     if(keyi < curri) {
@@ -289,6 +289,8 @@ Node<N, ElemType>* KDTree<N, ElemType>::kNNHelper(const Point<N>& key, size_t k,
     if(nearest == nullptr) {
         nearest = findNode(guess);
     }
+
+
 
     if(abs(curri - keyi) < bestDist) {
         Node<N, ElemType>* nearest2;
