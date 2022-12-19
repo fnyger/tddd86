@@ -59,6 +59,7 @@ public:
     // -----------------------------------------------------
     // Deep-copies the contents of another KDTree into this one.
     KDTree(const KDTree& rhs);
+
     KDTree& operator=(const KDTree& rhs);
     
     // size_t dimension() const;
@@ -122,7 +123,8 @@ private:
     void deleteTree(Node<N, ElemType>* node);
     Node<N, ElemType>* findNode(Point<N>) const;
     Node<N, ElemType>* insertNode(const Point<N>& p, const ElemType& data);
-    Node<N, ElemType>* kNNHelper(const Point<N>& key, size_t k, Point<N> guess, Node<N, ElemType>* current, double bestDist, int level) const;
+    void kNNHelper(const Point<N>& key, BoundedPQueue<Node<N, ElemType>*>& pqueue, Node<N, ElemType>* current, double bestDist, int level) const;
+    void recCopy(Node<N, ElemType>* other, Node<N, ElemType>* newNode);
 
     size_t sizeT = 0;
 };
@@ -265,62 +267,99 @@ Node<N, ElemType>* KDTree<N, ElemType>::insertNode(const Point<N>& p, const Elem
 }
 
 template <size_t N, typename ElemType>
-Node<N, ElemType>* KDTree<N, ElemType>::kNNHelper(const Point<N>& key, size_t k, Point<N> guess, Node<N, ElemType>* current, double bestDist, int level) const {
+void KDTree<N, ElemType>::kNNHelper(const Point<N>& key, BoundedPQueue<Node<N, ElemType>*>& pqueue , Node<N, ElemType>* current, double bestDist, int level) const {
 
     if(current == nullptr) {
-        return nullptr;
+        return;
     }
 
     double dist = Distance(current->point, key);
-    if(dist <= bestDist) {
-        bestDist = dist;
-        guess = current->point;
-    }
+    pqueue.enqueue(current, dist);
 
     double curri = current->point[level%N];
     double keyi = key[level%N];
-    Node<N, ElemType>* nearest;
 
     if(keyi < curri) {
-        nearest = kNNHelper(key, k, guess, current->left, bestDist, level + 1);
+        kNNHelper(key, pqueue, current->left, bestDist, level + 1);
     } else {
-        nearest = kNNHelper(key, k, guess, current->right, bestDist, level + 1);
-    }
-    if(nearest == nullptr) {
-        nearest = findNode(guess);
+        kNNHelper(key, pqueue, current->right, bestDist, level + 1);
     }
 
-
-
-    if(abs(curri - keyi) < bestDist) {
-        Node<N, ElemType>* nearest2;
+    if(abs(curri - keyi) < pqueue.worst() || pqueue.size() < pqueue.maxSize()) {
         if(keyi < curri) {
-            nearest2 = kNNHelper(key, k, guess, current->right, bestDist, level + 1);
+            kNNHelper(key, pqueue, current->right, bestDist, level + 1);
         } else {
-            nearest2 = kNNHelper(key, k, guess, current->left, bestDist, level + 1);
-        }
-        if(nearest2 != nullptr && Distance(nearest2->point, key) < Distance(nearest->point, key)) {
-            nearest = nearest2;
+            kNNHelper(key, pqueue, current->left, bestDist, level + 1);
         }
     }
-    if(Distance(nearest->point, key) > bestDist) {
-        nearest = findNode(guess);
-    }
-
-    return nearest;
 
 }
 
 
 template <size_t N, typename ElemType>
 ElemType KDTree<N, ElemType>::kNNValue(const Point<N>& key, size_t k) const {
-    Point<N> guess = root->point;
     double bestDist = Distance(root->point, key);
-    Node<N, ElemType>* nearestNode = kNNHelper(key, k, guess, root, bestDist, 0);
-    return nearestNode->data;
+    BoundedPQueue<Node<N, ElemType>*> pqueue(k);
+    kNNHelper(key, pqueue, root, bestDist, 0);
+
+
+    map<ElemType, int> karta;
+    while(!pqueue.empty()) {
+        ElemType curr = pqueue.dequeueMin()->data;
+
+        if(karta.count(curr)) {
+            karta[curr]++;
+        } else {
+            karta[curr] = 1;
+        }
+    }
+
+    pair<ElemType, int> biggest;
+    for(auto const& elem: karta) {
+        if(elem.second > biggest.second) {
+            biggest = elem;
+        }
+    }
+    return biggest.first;
 
 }
-// TODO: finish the implementation of the rest of the KDTree class
+template <size_t N, typename ElemType>
+KDTree<N, ElemType>::KDTree(const KDTree& rhs) {
+    if(this == &rhs) {
+        return;
+    }
+    this->root = new Node<N, ElemType>(rhs.root->point, rhs.root->data);
+    this->sizeT = rhs.sizeT;
+
+    recCopy(rhs.root, this->root);
+}
+
+template <size_t N, typename ElemType>
+void KDTree<N, ElemType>::recCopy(Node<N, ElemType>* other, Node<N, ElemType>* newNode) {
+
+    if(other->left != nullptr) {
+        newNode->left = new Node<N, ElemType>(other->left->point, other->left->data);
+        recCopy(other->left, newNode->left);
+    }
+    if(other->right != nullptr) {
+        newNode->right = new Node<N, ElemType>(other->right->point, other->right->data);
+        recCopy(other->right, newNode->right);
+    }
+}
+
+template <size_t N, typename ElemType>
+KDTree<N, ElemType>& KDTree<N, ElemType>::operator=(const KDTree& rhs) {
+    if(this == &rhs) {
+        return *this;
+    }
+    deleteTree(root);
+
+    this->root = new Node<N, ElemType>(rhs.root->point, rhs.root->data);
+    this->sizeT = rhs.sizeT;
+
+    recCopy(rhs.root, this->root);
+    return *this;
+}
 
 #endif // KDTREE_INCLUDED
 
