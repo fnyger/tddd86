@@ -118,12 +118,34 @@ public:
     ElemType kNNValue(const Point<N>& key, size_t k) const;
 
 private:
-    // TODO: Add implementation details here.
+    /*
+     * Root node of tree
+     */
     Node<N, ElemType>* root;
+
+    /*
+     * Delete the current tree
+     */
     void deleteTree(Node<N, ElemType>* node);
+
+    /*
+     * Find node from a given point
+     */
     Node<N, ElemType>* findNode(Point<N>) const;
+
+    /*
+     * Insert node to tree
+     */
     Node<N, ElemType>* insertNode(const Point<N>& p, const ElemType& data);
+
+    /*
+     * Recursive helper function to find KNN.
+     */
     void kNNHelper(const Point<N>& key, BoundedPQueue<Node<N, ElemType>*>& pqueue, Node<N, ElemType>* current, double bestDist, int level) const;
+
+    /*
+     * Recursive copy used in copy constructor and =operator overload.
+     */
     void recCopy(Node<N, ElemType>* other, Node<N, ElemType>* newNode);
 
     size_t sizeT = 0;
